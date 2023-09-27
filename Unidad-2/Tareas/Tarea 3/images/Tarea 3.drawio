@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-09-27T18:11:00.244Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0" etag="CMpgGC0Pr65aL7dSuSbk" version="21.8.2" type="github">
+<mxfile host="app.diagrams.net" modified="2023-09-27T18:19:13.905Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0" etag="vHZjhR29MDEPiLWmR33-" version="21.8.2" type="github">
   <diagram name="Página-1" id="TQR9zlu6BJ1Qan-c5ReP">
     <mxGraphModel dx="1434" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -27,7 +27,7 @@
         <mxCell id="3EP7MokuOxrkHio_u1YS-4" value="Artículos totales" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="620" y="425" width="70" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="3EP7MokuOxrkHio_u1YS-5" value="Límite de saldo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="3EP7MokuOxrkHio_u1YS-5" value="Límite de saldo" style="ellipse;whiteSpace=wrap;html=1;strokeColor=default;dashed=1;strokeWidth=1;perimeterSpacing=2;" parent="1" vertex="1">
           <mxGeometry x="150" y="250" width="70" height="40" as="geometry" />
         </mxCell>
         <mxCell id="3EP7MokuOxrkHio_u1YS-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="3EP7MokuOxrkHio_u1YS-6" target="3EP7MokuOxrkHio_u1YS-11" edge="1">
@@ -96,10 +96,10 @@
         <mxCell id="3EP7MokuOxrkHio_u1YS-14" value="Nº de fábrica" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=4" parent="1" vertex="1">
           <mxGeometry x="550" y="610" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="3EP7MokuOxrkHio_u1YS-16" value="PEDIDO" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="3EP7MokuOxrkHio_u1YS-16" value="PEDIDO" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="340" y="310" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="3EP7MokuOxrkHio_u1YS-17" value="PROVEEN" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="3EP7MokuOxrkHio_u1YS-17" value="PROVEEN" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="515" y="410" width="70" height="70" as="geometry" />
         </mxCell>
         <mxCell id="3EP7MokuOxrkHio_u1YS-18" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="3EP7MokuOxrkHio_u1YS-16" target="3EP7MokuOxrkHio_u1YS-2" edge="1">
