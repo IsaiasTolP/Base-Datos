@@ -147,13 +147,13 @@ De donde he sacado la información para hacer estas sentencias SQL:
 * [Apuntes modificaciones](https://github.com/jpexposito/docencia/blob/master/Primero/BAE/UNIDAD-5/sqlite/06_update.md)
 
 **Todas las sentencias están realizadas una trás otra sobre la misma tabla.**
-### Eliminaciones tarea 1
+### Eliminaciones y modificaciones tarea 1
 1. La sentencia SQL que elimina las entradas donde el campo ```booleano``` es igual a ```True```.
 ```sql
 delete from Ejemplo
 where booleano = True;
 ```
-* Obtendríamos la siguiente salida de la tabla Ejemplo tras esta sentencia SQL.
+* Obtendríamos la siguiente salida de la tabla Ejemplo tras esta sentencia SQL:
 ```code
 +----+-----------+--------+---------+------------+----------+
 | id |   texto   | entero | decimal |   fecha    | booleano |
@@ -186,48 +186,135 @@ where booleano = True;
 +----+-----------+--------+---------+------------+----------+
 ```
 
-2. Elimina las entradas donde el campo ```entero``` es igual a 50.
-```sql
-delete from Ejemplo
-where entero = 50;
-```
-* La sentencia nos devolvería la siguiente tabla
-```code
-
-```
-
-3. Elimina las entradas donde el campo ```decimal``` es menor a 50.
-```sql
-delete from Ejemplo
-where decimal < 50;
-```
-* La salida que obtendríamos sería la siguiente
-```code
-
-```
-
-### Modificaciones tarea 1
-1. Modifica el campo ```texto``` de las entradas donde el campo ```entero``` es menor a 30 y establece el texto como "Modificado".
+2. La sentencia SQL que modifica el campo ```texto``` de las entradas donde el campo ```entero``` es menor a 30 y establece el texto como "Modificado" sería:
 ```sql
 update Ejemplo set texto = 'Modificado'
 where entero < 30;
 ```
 * La salida obtenida sería la siguiente:
 ```code
-
++----+------------+--------+---------+------------+----------+
+| id |   texto    | entero | decimal |   fecha    | booleano |
++----+------------+--------+---------+------------+----------+
+| 1  | Modificado | 25     | 10.5    | 2022-05-15 | 0        |
+| 3  | Modificado | 12     | 30.0    | 2022-07-10 | 0        |
+| 5  | Ejemplo5   | 42     | 18.9    | 2022-09-12 | 0        |
+| 7  | Modificado | 10     | 40.1    | 2022-11-17 | 0        |
+| 9  | Ejemplo9   | 31     | 55.0    | 2023-01-20 | 0        |
+| 11 | Modificado | 15     | 12.8    | 2023-03-22 | 0        |
+| 13 | Modificado | 22     | 33.7    | 2023-05-01 | 0        |
+| 15 | Ejemplo15  | 37     | 15.4    | 2023-07-05 | 0        |
+| 17 | Ejemplo17  | 45     | 28.3    | 2023-09-27 | 0        |
+| 19 | Modificado | 5      | 8.7     | 2023-11-22 | 0        |
+| 21 | Ejemplo21  | 33     | 20.3    | 2024-01-14 | 0        |
+| 23 | Modificado | 13     | 42.7    | 2024-03-18 | 0        |
+| 25 | Ejemplo25  | 49     | 15.9    | 2024-05-12 | 0        |
+| 27 | Modificado | 8      | 35.2    | 2024-07-07 | 0        |
+| 29 | Modificado | 27     | 50.0    | 2024-09-10 | 0        |
+| 31 | Modificado | 18     | 11.8    | 2024-11-12 | 0        |
+| 33 | Ejemplo33  | 38     | 32.7    | 2025-01-15 | 0        |
+| 35 | Ejemplo35  | 52     | 18.4    | 2025-03-20 | 0        |
+| 37 | Ejemplo37  | 43     | 28.3    | 2025-05-13 | 0        |
+| 39 | Modificado | 9      | 8.7     | 2025-07-17 | 0        |
+| 41 | Modificado | 26     | 20.3    | 2025-09-09 | 0        |
+| 43 | Modificado | 14     | 42.7    | 2025-11-13 | 0        |
+| 45 | Ejemplo45  | 50     | 15.9    | 2026-01-16 | 0        |
+| 47 | Modificado | 7      | 35.2    | 2026-03-22 | 0        |
+| 49 | Modificado | 28     | 50.0    | 2026-05-25 | 0        |
++----+------------+--------+---------+------------+----------+
 ```
 
-2. Incrementa en 10 el valor del campo ```entero``` para las entradas donde el campo ```booleano``` es igual ```False```.
+3. La sentencia SQL elimina las entradas donde el campo ```entero``` es igual a 50 sería:
+```sql
+delete from Ejemplo
+where entero = 50;
+```
+* La sentencia nos devolvería la siguiente tabla:
+```code
++----+------------+--------+---------+------------+----------+
+| id |   texto    | entero | decimal |   fecha    | booleano |
++----+------------+--------+---------+------------+----------+
+| 1  | Modificado | 25     | 10.5    | 2022-05-15 | 0        |
+| 3  | Modificado | 12     | 30.0    | 2022-07-10 | 0        |
+| 5  | Ejemplo5   | 42     | 18.9    | 2022-09-12 | 0        |
+| 7  | Modificado | 10     | 40.1    | 2022-11-17 | 0        |
+| 9  | Ejemplo9   | 31     | 55.0    | 2023-01-20 | 0        |
+| 11 | Modificado | 15     | 12.8    | 2023-03-22 | 0        |
+| 13 | Modificado | 22     | 33.7    | 2023-05-01 | 0        |
+| 15 | Ejemplo15  | 37     | 15.4    | 2023-07-05 | 0        |
+| 17 | Ejemplo17  | 45     | 28.3    | 2023-09-27 | 0        |
+| 19 | Modificado | 5      | 8.7     | 2023-11-22 | 0        |
+| 21 | Ejemplo21  | 33     | 20.3    | 2024-01-14 | 0        |
+| 23 | Modificado | 13     | 42.7    | 2024-03-18 | 0        |
+| 25 | Ejemplo25  | 49     | 15.9    | 2024-05-12 | 0        |
+| 27 | Modificado | 8      | 35.2    | 2024-07-07 | 0        |
+| 29 | Modificado | 27     | 50.0    | 2024-09-10 | 0        |
+| 31 | Modificado | 18     | 11.8    | 2024-11-12 | 0        |
+| 33 | Ejemplo33  | 38     | 32.7    | 2025-01-15 | 0        |
+| 35 | Ejemplo35  | 52     | 18.4    | 2025-03-20 | 0        |
+| 37 | Ejemplo37  | 43     | 28.3    | 2025-05-13 | 0        |
+| 39 | Modificado | 9      | 8.7     | 2025-07-17 | 0        |
+| 41 | Modificado | 26     | 20.3    | 2025-09-09 | 0        |
+| 43 | Modificado | 14     | 42.7    | 2025-11-13 | 0        |
+| 47 | Modificado | 7      | 35.2    | 2026-03-22 | 0        |
+| 49 | Modificado | 28     | 50.0    | 2026-05-25 | 0        |
++----+------------+--------+---------+------------+----------+
+```
+
+4. La sentencia SQL que incrementa en 10 el valor del campo ```entero``` para las entradas donde el campo ```booleano``` es igual ```False``` sería:
 ```sql
 update Ejemplo set entero = entero + 10
 where booleano = False;
 ```
-* Esta sería la siguiente salida obtenida
+* Esta sería la siguiente salida obtenida:
 ```code
-
++----+------------+--------+---------+------------+----------+
+| id |   texto    | entero | decimal |   fecha    | booleano |
++----+------------+--------+---------+------------+----------+
+| 1  | Modificado | 35     | 10.5    | 2022-05-15 | 0        |
+| 3  | Modificado | 22     | 30.0    | 2022-07-10 | 0        |
+| 5  | Ejemplo5   | 52     | 18.9    | 2022-09-12 | 0        |
+| 7  | Modificado | 20     | 40.1    | 2022-11-17 | 0        |
+| 9  | Ejemplo9   | 41     | 55.0    | 2023-01-20 | 0        |
+| 11 | Modificado | 25     | 12.8    | 2023-03-22 | 0        |
+| 13 | Modificado | 32     | 33.7    | 2023-05-01 | 0        |
+| 15 | Ejemplo15  | 47     | 15.4    | 2023-07-05 | 0        |
+| 17 | Ejemplo17  | 55     | 28.3    | 2023-09-27 | 0        |
+| 19 | Modificado | 15     | 8.7     | 2023-11-22 | 0        |
+| 21 | Ejemplo21  | 43     | 20.3    | 2024-01-14 | 0        |
+| 23 | Modificado | 23     | 42.7    | 2024-03-18 | 0        |
+| 25 | Ejemplo25  | 59     | 15.9    | 2024-05-12 | 0        |
+| 27 | Modificado | 18     | 35.2    | 2024-07-07 | 0        |
+| 29 | Modificado | 37     | 50.0    | 2024-09-10 | 0        |
+| 31 | Modificado | 28     | 11.8    | 2024-11-12 | 0        |
+| 33 | Ejemplo33  | 48     | 32.7    | 2025-01-15 | 0        |
+| 35 | Ejemplo35  | 62     | 18.4    | 2025-03-20 | 0        |
+| 37 | Ejemplo37  | 53     | 28.3    | 2025-05-13 | 0        |
+| 39 | Modificado | 19     | 8.7     | 2025-07-17 | 0        |
+| 41 | Modificado | 36     | 20.3    | 2025-09-09 | 0        |
+| 43 | Modificado | 24     | 42.7    | 2025-11-13 | 0        |
+| 47 | Modificado | 17     | 35.2    | 2026-03-22 | 0        |
+| 49 | Modificado | 38     | 50.0    | 2026-05-25 | 0        |
++----+------------+--------+---------+------------+----------+
 ```
 
-3. Actualiza el campo ```fecha``` de todas las entradas a la fecha actual.
+5. La sentencia SQL que elimina las entradas donde el campo ```decimal``` es menor a 50 sería:
+```sql
+delete from Ejemplo
+where decimal < 50;
+```
+* La salida que obtendríamos sería la siguiente:
+```code
++----+------------+--------+---------+------------+----------+
+| id |   texto    | entero | decimal |   fecha    | booleano |
++----+------------+--------+---------+------------+----------+
+| 9  | Ejemplo9   | 41     | 55.0    | 2023-01-20 | 0        |
+| 29 | Modificado | 37     | 50.0    | 2024-09-10 | 0        |
+| 49 | Modificado | 38     | 50.0    | 2026-05-25 | 0        |
++----+------------+--------+---------+------------+----------+
+```
+
+6. La sentencia SQL que actualiza el campo ```fecha``` de todas las entradas a la fecha actual sería:
 ```sql
 update Ejemplo set fecha = '2023-12-14';
 ```
