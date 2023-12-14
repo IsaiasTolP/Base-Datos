@@ -46,5 +46,16 @@ select * from Ejemplo
 where id = 2
 ```
 
+### Consultas de la tarea 1
+1. Todas las entradas de la tabla ```Ejemplo```
+```sql
+select * from Ejemplo
+```
+2. Las entradas del campo ```entero``` mayor que 50
+```sql
+select * from Ejemplo
+where entero > 50
+```
+
 
 </div>
