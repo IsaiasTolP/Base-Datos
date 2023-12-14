@@ -30,4 +30,21 @@ values ( 'Ejemplo5', '42', '18.9', '2022-09-12', '0');
 ```
 Ahí se ven 2 ejemplos de una inserción de datos en tablas, exponemos primero la tabla donde queremos insertar los datos y las columnas concretas, acto seguido vamos poniendo los valores, cada uno se insertará en una columna siguiendo el orden puesto en la primera línea.
 
+## Consultando en una tabla
+Para consultar en una tabla de momento nos podrían interesar estos tipos de consulta:
+* Una consulta global donde veremos todos los datos de la tabla:
+```sql
+select * from Ejemplo
+```
+* Una consulta específica de una parte de las columnas tabla:
+```sql
+select id, entero from Ejemplo
+```
+* Una consulta específica de una/s fila de la tabla:
+```sql
+select * from Ejemplo
+where id = 2
+```
+
+
 </div>
