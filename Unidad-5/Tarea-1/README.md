@@ -36,6 +36,13 @@ insert into Ejemplo ( texto, entero, decimal, fecha, booleano )
 values ( 'Ejemplo5', '42', '18.9', '2022-09-12', '0');
 ```
 Ahí se ven 2 ejemplos de una inserción de datos en tablas, exponemos primero la tabla donde queremos insertar los datos y las columnas concretas, acto seguido vamos poniendo los valores, cada uno se insertará en una columna siguiendo el orden puesto en la primera línea.
+* Si quisieramos también podríamos introducir varios datos en una sola sentencia SQL:
+```sql
+insert into Ejemplo ( texto, entero, decimal, fecha, booleano )
+values ( 'Ejemplo48', '96', '25.6', '2026-04-08', '1' ),
+values ( 'Ejemplo49', '28', '50.0', '2026-05-25', '0' ),
+values ( 'Ejemplo50', '75', '85.3', '2026-06-11', '1' );
+```
 
 ## Consultando en una tabla
 Los apuntes de donde he sacado información para hacer consultas son:
