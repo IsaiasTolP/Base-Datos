@@ -23,7 +23,7 @@ create table Vehiculos
 marca text not null,
 modelo text not null,
 anio integer not null,
-id_propietario integer, references Propietarios(id));
+id_propietario integer references Propietarios(id));
 ```
 
 Hay que fijarse que la segunda tabla de Vehículos contiene una _foreign key_ por lo que sería ideal, hacer primero la tabla a la que esta referencia para no complicar la creación de la base de datos.
