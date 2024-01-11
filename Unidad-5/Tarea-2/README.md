@@ -32,23 +32,29 @@ Hay que fijarse que la segunda tabla de Vehículos contiene una _foreign key_ po
 
 ### Algunos ejemplos de inserción en la 1ª Tabla:
 ```sql
-INSERT INTO Propietarios VALUES('Pepe','Perez','12345678A');
+INSERT INTO Propietarios ( nombre, apellido, dni )
+VALUES('Pepe','Perez','12345678A');
 ```
 ```sql
-INSERT INTO Propietarios VALUES('Maria','Lopez','87654321B');
+INSERT INTO Propietarios ( nombre, apellido, dni )
+VALUES('Maria','Lopez','87654321B');
 ```
 ```sql
-INSERT INTO Propietarios VALUES('Victor','Vargas','11111112M');
+INSERT INTO Propietarios ( nombre, apellido, dni )
+VALUES('Victor','Vargas','11111112M');
 ```
 ### Algunos ejemplos de inserción en la 2ª tabla:
 ```sql
-INSERT INTO Vehiculos VALUES('Ford','Fiesta',2019,1);
+INSERT INTO Vehiculos ( marca, modelo, anio, id_propietario )
+VALUES('Ford','Fiesta',2019,1);
 ```
 ```sql
-INSERT INTO Vehiculos VALUES('Honda','CR-V',2018,9);
+INSERT INTO Vehiculos ( marca, modelo, anio, id_propietario )
+VALUES('Honda','CR-V',2018,9);
 ```
 ```sql
-INSERT INTO Vehiculos VALUES(18,'Toyota','Highlander',2020,18);
+INSERT INTO Vehiculos ( marca, modelo, anio, id_propietario )
+VALUES(18,'Toyota','Highlander',2020,18);
 ```
 ## Realizar 10 consultas de datos
 
