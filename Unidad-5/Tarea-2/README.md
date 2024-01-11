@@ -34,38 +34,83 @@ Hay que fijarse que la segunda tabla de Vehículos contiene una _foreign key_ po
 
 Todos los propietarios:
 ```sql
-select * from Propietarios
+select * from Propietarios;
 ```
 Todos los vehículos:
 ```sql
-select * from Vehiculos
+select * from Vehiculos;
 ```
 Nombres y apellidos de propietarios:
+```sql
+select nombre, apellido from Propietarios;
+```
 
 Todas las marcas y modelos de vehiculos:
+```sql
+select marca, modelo from Vehiculos
+```
 
 Propietarios con apellido "Perez":
+```sql
+select * from Propietarios
+where apellido="Perez";
+```
 
 Vehículos con año 2019:
+```sql
+select * from Vehiculos
+where anio="2019"
+```
 
 Propietarios de un "Toyota"
+```sql
+
+```
 
 Vehículos de marca "Ford" y modelo "Fiesta":
+```sql
+select * from Vehiculos
+where marca="Ford" and modelo="Fiesta;"
+```
 
 Propietarios con DNI "12345678A"
+```sql
+select * from Propietarios
+where dni="12345678A";
+```
 
 Propietario con ID 5:
 
 ## Realizar 5 cambios(Updates)
 
 Actualizar nombre de propietario con DNI "12345678A":
+```sql
+update Propietarios set nombre="Pepe"
+where dni="12345678A";
+```
 
 Modificar año de vehículo con ID "3" a "2022":
+```sql
+update Vehiculos set anio="2018"
+where id="3";
+```
 
 Cambiar modelo de todos los vehículos Nissan a "Micra":
+```sql
+update Vehiculos set modelo="Micra"
+where marca="Nissan";
+```
 
 Actualizar el apellido de un propietario con ID "7" a "Gomez":
+```sql
+update Propietarios set apellido="Gomez"
+where id="7";
+```
 
 Modificar la marca de un vehículo con modelo "Fiesta" a "Renault":
+```sql
+update Vehiculos set marca="Renault"
+where modelo="Fiesta"
+```
 
 </div>
