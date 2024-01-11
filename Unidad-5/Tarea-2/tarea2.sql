@@ -29,7 +29,7 @@ CREATE TABLE Vehiculos ( id integer primary key autoincrement,
 marca text not null,
 modelo text not null,
 anio integer not null,
-id_propietario integer	 references Propietario(id)
+id_propietario integer	 references Propietarios(id)
 );
 INSERT INTO Vehiculos VALUES(1,'Renault','Fiesta',2019,1);
 INSERT INTO Vehiculos VALUES(2,'Toyota','Corolla',2018,2);

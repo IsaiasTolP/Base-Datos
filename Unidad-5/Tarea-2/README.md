@@ -84,7 +84,9 @@ where anio="2019"
 
 Propietarios de un "Toyota"
 ```sql
-
+select P.* from Propietarios as P, Vehiculos as V
+where V.marca="Toyota" and
+P.id=V.id_propietario;
 ```
 
 Vehículos de marca "Ford" y modelo "Fiesta":
