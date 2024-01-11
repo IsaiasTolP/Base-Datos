@@ -2,7 +2,17 @@
 
 # <div align="center">Tarea 2 de SQLite</div>
 
-## I
+![Logo SQLite](./img/SQLite-logo.png)
+
+## Índice
+1. Crear la base de datos.
+    - Crear la primera tabla
+    - Crear la segunda tabla
+2. Inserciones en las tablas creadas.
+    - Ejemplos de inserción en primera tabla
+    - Ejemplos de inserción en segunda tabla
+3. Consultas en la base de datos.
+4. Haciendo updates en la tabla.
 
 ## Crear la base de datos
 Entramos a la base de datos (si ya está creada, sinó la crea) mediante el comando de terminal ```sqlite3 tarea2.db```
