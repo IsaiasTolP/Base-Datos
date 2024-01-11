@@ -74,6 +74,7 @@ Todos los propietarios:
 ```sql
 select * from Propietarios;
 ```
+```
 +----+----------+-----------+-----------+
 | id |  nombre  | apellido  |    dni    |
 +----+----------+-----------+-----------+
@@ -98,9 +99,11 @@ select * from Propietarios;
 | 19 | Sergio   | Mendoza   | 17171717S |
 | 20 | Patricia | Navarro   | 18181818T |
 +----+----------+-----------+-----------+
+```
 Todos los vehículos:
 ```sql
 select * from Vehiculos;
+```
 ```
 +----+------------+------------+------+----------------+
 | id |   marca    |   modelo   | anio | id_propietario |
@@ -126,10 +129,12 @@ select * from Vehiculos;
 | 19 | Honda      | Odyssey    | 2016 | 19             |
 | 20 | Nissan     | Micra      | 2019 | 20             |
 +----+------------+------------+------+----------------+
+```
 
 Nombres y apellidos de propietarios:
 ```sql
 select nombre, apellido from Propietarios;
+```
 ```
 +----------+-----------+
 |  nombre  | apellido  |
@@ -155,10 +160,12 @@ select nombre, apellido from Propietarios;
 | Sergio   | Mendoza   |
 | Patricia | Navarro   |
 +----------+-----------+
+```
 
 Todas las marcas y modelos de vehiculos:
 ```sql
 select marca, modelo from Vehiculos
+```
 ```
 +------------+------------+
 |   marca    |   modelo   |
@@ -184,20 +191,26 @@ select marca, modelo from Vehiculos
 | Honda      | Odyssey    |
 | Nissan     | Micra      |
 +------------+------------+
+```
+
 Propietarios con apellido "Perez":
 ```sql
 select * from Propietarios
 where apellido="Perez";
+```
 ```
 +----+--------+----------+-----------+
 | id | nombre | apellido |    dni    |
 +----+--------+----------+-----------+
 | 1  | Pepe   | Perez    | 12345678A |
 +----+--------+----------+-----------+
+```
+
 Vehículos con año 2019:
 ```sql
 select * from Vehiculos
 where anio="2019"
+```
 ```
 +----+------------+--------+------+----------------+
 | id |   marca    | modelo | anio | id_propietario |
@@ -208,12 +221,14 @@ where anio="2019"
 | 16 | Volkswagen | Jetta  | 2019 | 16             |
 | 20 | Nissan     | Micra  | 2019 | 20             |
 +----+------------+--------+------+----------------+
+```
 
 Propietarios de un "Toyota"
 ```sql
 select P.* from Propietarios as P, Vehiculos as V
 where V.marca="Toyota" and
 P.id=V.id_propietario;
+```
 ```
 +----+--------+----------+-----------+
 | id | nombre | apellido |    dni    |
@@ -223,37 +238,46 @@ P.id=V.id_propietario;
 | 12 | Marta  | Diaz     | 10101010L |
 | 18 | Clara  | Soto     | 16161616R |
 +----+--------+----------+-----------+
+```
+
 Vehículos de marca "Ford" y modelo "Fiesta":
 ```sql
 select * from Vehiculos
 where marca="Ford" and modelo="Fiesta";
+```
 ```
 +----+-------+--------+------+----------------+
 | id | marca | modelo | anio | id_propietario |
 +----+-------+--------+------+----------------+
 | 1  | Ford  | Fiesta | 2019 | 1              |
 +----+-------+--------+------+----------------+
+```
 
 Propietarios con DNI "12345678A"
 ```sql
 select * from Propietarios
 where dni="12345678A";
 ```
+```
 +----+--------+----------+-----------+
 | id | nombre | apellido |    dni    |
 +----+--------+----------+-----------+
 | 1  | Pepe   | Perez    | 12345678A |
 +----+--------+----------+-----------+
+```
+
 Propietario con ID 5:
 ```sql
 select * from Propietarios
 where id="5"
+```
 ```
 +----+--------+----------+-----------+
 | id | nombre | apellido |    dni    |
 +----+--------+----------+-----------+
 | 5  | Pedro  | Martinez | 33333333E |
 +----+--------+----------+-----------+
+```
 
 ## Realizar 5 cambios(Updates)
 
