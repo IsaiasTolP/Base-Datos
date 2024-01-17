@@ -43,36 +43,306 @@ Hay que fijarse en con el UPPER las letras con tildes seguirán siendo minúscul
 
 2. Valor absoluto del salario de los empleados
 ```sql
+select ABS(salario) AS salario from empleados;
+┌─────────┐
+│ salario │
+├─────────┤
+│ 50000.0 │
+│ 60000.0 │
+│ 55000.0 │
+│ 48000.0 │
+│ 70000.0 │
+│ 52000.0 │
+│ 48000.0 │
+│ 65000.0 │
+│ 51000.0 │
+│ 55000.0 │
+│ 72000.0 │
+│ 49000.0 │
+│ 60000.0 │
+│ 53000.0 │
+│ 68000.0 │
+│ 47000.0 │
+│ 71000.0 │
+│ 54000.0 │
+│ 49000.0 │
+│ 63000.0 │
+└─────────┘
 
 ```
 
 3. La fecha actual
+```sql
+select CURRENT_DATE AS fecha;
+┌────────────┐
+│   fecha    │
+├────────────┤
+│ 2024-01-17 │
+└────────────┘
+```
 
 4. Promedio del salario de los empleados
+```sql
+select AVG(salario) AS "Media salarios" from empleados;
+┌────────────────┐
+│ Media salarios │
+├────────────────┤
+│ 57000.0        │
+└────────────────┘
+```
 
 5. Convertir la cadena '123' a entero
+```sql
+select CAST('123' AS INTEGER) AS conversion;
+┌────────────┐
+│ conversion │
+├────────────┤
+│ 123        │
+└────────────┘
+```
 
 6. Concatenar el nombre y el departamento de cada empleado con un guión como separador
+```sql
+select nombre || '-' || departamento AS "nombre y departamento" from empleados;
+┌───────────────────────────┐
+│   nombre y departamento   │
+├───────────────────────────┤
+│ Juan-Ventas               │
+│ María-TI                  │
+│ Carlos-Ventas             │
+│ Ana-Recursos Humanos      │
+│ Pedro-TI                  │
+│ Laura-Ventas              │
+│ Javier-Recursos Humanos   │
+│ Carmen-TI                 │
+│ Miguel-Ventas             │
+│ Elena-Recursos Humanos    │
+│ Diego-TI                  │
+│ Sofía-Ventas              │
+│ Andrés-Recursos Humanos   │
+│ Isabel-TI                 │
+│ Raúl-Ventas               │
+│ Patricia-Recursos Humanos │
+│ Alejandro-TI              │
+│ Natalia-Ventas            │
+│ Roberto-Recursos Humanos  │
+│ Beatriz-TI                │
+└───────────────────────────┘
+```
 
 7. Categoriza a los empleados según sus salarios.
-
+```sql
+Select salario,CASE WHEN salario > 50000 
+THEN 'Rico' ELSE 'Pobre' 
+END AS rango_salario from empleados;
+┌─────────┬───────────────┐
+│ salario │ rango_salario │
+├─────────┼───────────────┤
+│ 50000.0 │ Pobre         │
+│ 60000.0 │ Rico          │
+│ 55000.0 │ Rico          │
+│ 48000.0 │ Pobre         │
+│ 70000.0 │ Rico          │
+│ 52000.0 │ Rico          │
+│ 48000.0 │ Pobre         │
+│ 65000.0 │ Rico          │
+│ 51000.0 │ Rico          │
+│ 55000.0 │ Rico          │
+│ 72000.0 │ Rico          │
+│ 49000.0 │ Pobre         │
+│ 60000.0 │ Rico          │
+│ 53000.0 │ Rico          │
+│ 68000.0 │ Rico          │
+│ 47000.0 │ Pobre         │
+│ 71000.0 │ Rico          │
+│ 54000.0 │ Rico          │
+│ 49000.0 │ Pobre         │
+│ 63000.0 │ Rico          │
+└─────────┴───────────────┘
+```
 8. Calcula la suma total de salarios de todos los empleados.
-
+```sql
+select SUM(salario) AS "Gasto_total" from empleados;
+┌─────────────┐
+│ Gasto_total │
+├─────────────┤
+│ 1140000.0   │
+└─────────────┘
+```
 9.  Redondea el salario de todos los empleados a dos decimales. 
+```sql
+select ROUND(salario, 2) AS "salario redondeado" from empleados;
+┌────────────────────┐
+│ salario redondeado │
+├────────────────────┤
+│ 50000.0            │
+│ 60000.0            │
+│ 55000.0            │
+│ 48000.0            │
+│ 70000.0            │
+│ 52000.0            │
+│ 48000.0            │
+│ 65000.0            │
+│ 51000.0            │
+│ 55000.0            │
+│ 72000.0            │
+│ 49000.0            │
+│ 60000.0            │
+│ 53000.0            │
+│ 68000.0            │
+│ 47000.0            │
+│ 71000.0            │
+│ 54000.0            │
+│ 49000.0            │
+│ 63000.0            │
+└────────────────────┘
+```
 
 10. Muestra la longitud de cada nombre de empleado.
+```sql
+select nombre, LENGTH(nombre) AS Longitud from empleados;
+┌───────────┬──────────┐
+│  nombre   │ Longitud │
+├───────────┼──────────┤
+│ Juan      │ 4        │
+│ María     │ 5        │
+│ Carlos    │ 6        │
+│ Ana       │ 3        │
+│ Pedro     │ 5        │
+│ Laura     │ 5        │
+│ Javier    │ 6        │
+│ Carmen    │ 6        │
+│ Miguel    │ 6        │
+│ Elena     │ 5        │
+│ Diego     │ 5        │
+│ Sofía     │ 5        │
+│ Andrés    │ 6        │
+│ Isabel    │ 6        │
+│ Raúl      │ 4        │
+│ Patricia  │ 8        │
+│ Alejandro │ 9        │
+│ Natalia   │ 7        │
+│ Roberto   │ 7        │
+│ Beatriz   │ 7        │
+└───────────┴──────────┘
+```
 
 11. Cuenta el número total de empleados en cada departamento.
+```sql
+select COUNT(id) AS "Numero de empleados" from empleados;
+┌─────────────────────┐
+│ Numero de empleados │
+├─────────────────────┤
+│ 20                  │
+└─────────────────────┘
+```
 
 12. Muestra la hora actual.
+```sql
+select current_time AS hora;
+┌──────────┐
+│   hora   │
+├──────────┤
+│ 19:22:49 │
+└──────────┘
+```
 
 13. Convierte el salario a un valor de punto flotante.
+```sql
+select CAST(salario AS FLOAT) AS "salario flotante" from empleados;
+┌──────────────────┐
+│ salario flotante │
+├──────────────────┤
+│ 50000.0          │
+│ 60000.0          │
+│ 55000.0          │
+│ 48000.0          │
+│ 70000.0          │
+│ 52000.0          │
+│ 48000.0          │
+│ 65000.0          │
+│ 51000.0          │
+│ 55000.0          │
+│ 72000.0          │
+│ 49000.0          │
+│ 60000.0          │
+│ 53000.0          │
+│ 68000.0          │
+│ 47000.0          │
+│ 71000.0          │
+│ 54000.0          │
+│ 49000.0          │
+│ 63000.0          │
+└──────────────────┘
+```
 
 14. Muestra los primeros tres caracteres de cada nombre de empleado.
+```sql
+select SUBSTR(nombre, 1, 3) as Iniciales from empleados;
+┌───────────┐
+│ Iniciales │
+├───────────┤
+│ Jua       │
+│ Mar       │
+│ Car       │
+│ Ana       │
+│ Ped       │
+│ Lau       │
+│ Jav       │
+│ Car       │
+│ Mig       │
+│ Ele       │
+│ Die       │
+│ Sof       │
+│ And       │
+│ Isa       │
+│ Raú       │
+│ Pat       │
+│ Ale       │
+│ Nat       │
+│ Rob       │
+│ Bea       │
+└───────────┘
+```
 
 15. Empleados en el departamento de 'Ventas' con salarios superiores a 52000.
+```sql
+select nombre, departamento, salario from empleados 
+where departamento = 'Ventas' and salario > 52000;
+┌─────────┬──────────────┬─────────┐
+│ nombre  │ departamento │ salario │
+├─────────┼──────────────┼─────────┤
+│ Carlos  │ Ventas       │ 55000.0 │
+│ Raúl    │ Ventas       │ 68000.0 │
+│ Natalia │ Ventas       │ 54000.0 │
+└─────────┴──────────────┴─────────┘
+```
 
 16. Empleados cuyos nombres contienen la letra 'a' y tienen salarios ordenados de manera ascendente.
+```sql
+select nombre, salario from empleados
+where nombre LIKE '%a%' order by salario;
+┌───────────┬─────────┐
+│  nombre   │ salario │
+├───────────┼─────────┤
+│ Patricia  │ 47000.0 │
+│ Ana       │ 48000.0 │
+│ Javier    │ 48000.0 │
+│ Sofía     │ 49000.0 │
+│ Juan      │ 50000.0 │
+│ Laura     │ 52000.0 │
+│ Isabel    │ 53000.0 │
+│ Natalia   │ 54000.0 │
+│ Carlos    │ 55000.0 │
+│ Elena     │ 55000.0 │
+│ María     │ 60000.0 │
+│ Andrés    │ 60000.0 │
+│ Beatriz   │ 63000.0 │
+│ Carmen    │ 65000.0 │
+│ Raúl      │ 68000.0 │
+│ Alejandro │ 71000.0 │
+└───────────┴─────────┘
+```
 
 17. Empleados en el departamento 'Recursos Humanos' con salarios entre 45000 y 55000.
 
