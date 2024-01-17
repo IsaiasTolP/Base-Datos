@@ -132,33 +132,33 @@ select nombre || '-' || departamento AS "nombre y departamento" from empleados;
 
 7. Categoriza a los empleados según sus salarios.
 ```sql
-Select salario,CASE WHEN salario > 50000 
+Select *,CASE WHEN salario > 50000 
 THEN 'Rico' ELSE 'Pobre' 
 END AS rango_salario from empleados;
-┌─────────┬───────────────┐
-│ salario │ rango_salario │
-├─────────┼───────────────┤
-│ 50000.0 │ Pobre         │
-│ 60000.0 │ Rico          │
-│ 55000.0 │ Rico          │
-│ 48000.0 │ Pobre         │
-│ 70000.0 │ Rico          │
-│ 52000.0 │ Rico          │
-│ 48000.0 │ Pobre         │
-│ 65000.0 │ Rico          │
-│ 51000.0 │ Rico          │
-│ 55000.0 │ Rico          │
-│ 72000.0 │ Rico          │
-│ 49000.0 │ Pobre         │
-│ 60000.0 │ Rico          │
-│ 53000.0 │ Rico          │
-│ 68000.0 │ Rico          │
-│ 47000.0 │ Pobre         │
-│ 71000.0 │ Rico          │
-│ 54000.0 │ Rico          │
-│ 49000.0 │ Pobre         │
-│ 63000.0 │ Rico          │
-└─────────┴───────────────┘
+┌────┬───────────┬─────────┬──────────────────┬───────────────┐
+│ id │  nombre   │ salario │   departamento   │ rango_salario │
+├────┼───────────┼─────────┼──────────────────┼───────────────┤
+│ 1  │ Juan      │ 50000.0 │ Ventas           │ Pobre         │
+│ 2  │ María     │ 60000.0 │ TI               │ Rico          │
+│ 3  │ Carlos    │ 55000.0 │ Ventas           │ Rico          │
+│ 4  │ Ana       │ 48000.0 │ Recursos Humanos │ Pobre         │
+│ 5  │ Pedro     │ 70000.0 │ TI               │ Rico          │
+│ 6  │ Laura     │ 52000.0 │ Ventas           │ Rico          │
+│ 7  │ Javier    │ 48000.0 │ Recursos Humanos │ Pobre         │
+│ 8  │ Carmen    │ 65000.0 │ TI               │ Rico          │
+│ 9  │ Miguel    │ 51000.0 │ Ventas           │ Rico          │
+│ 10 │ Elena     │ 55000.0 │ Recursos Humanos │ Rico          │
+│ 11 │ Diego     │ 72000.0 │ TI               │ Rico          │
+│ 12 │ Sofía     │ 49000.0 │ Ventas           │ Pobre         │
+│ 13 │ Andrés    │ 60000.0 │ Recursos Humanos │ Rico          │
+│ 14 │ Isabel    │ 53000.0 │ TI               │ Rico          │
+│ 15 │ Raúl      │ 68000.0 │ Ventas           │ Rico          │
+│ 16 │ Patricia  │ 47000.0 │ Recursos Humanos │ Pobre         │
+│ 17 │ Alejandro │ 71000.0 │ TI               │ Rico          │
+│ 18 │ Natalia   │ 54000.0 │ Ventas           │ Rico          │
+│ 19 │ Roberto   │ 49000.0 │ Recursos Humanos │ Pobre         │
+│ 20 │ Beatriz   │ 63000.0 │ TI               │ Rico          │
+└────┴───────────┴─────────┴──────────────────┴───────────────┘
 ```
 8. Calcula la suma total de salarios de todos los empleados.
 ```sql
@@ -169,33 +169,34 @@ select SUM(salario) AS "Gasto_total" from empleados;
 │ 1140000.0   │
 └─────────────┘
 ```
+
 9.  Redondea el salario de todos los empleados a dos decimales. 
 ```sql
-select ROUND(salario, 2) AS "salario redondeado" from empleados;
-┌────────────────────┐
-│ salario redondeado │
-├────────────────────┤
-│ 50000.0            │
-│ 60000.0            │
-│ 55000.0            │
-│ 48000.0            │
-│ 70000.0            │
-│ 52000.0            │
-│ 48000.0            │
-│ 65000.0            │
-│ 51000.0            │
-│ 55000.0            │
-│ 72000.0            │
-│ 49000.0            │
-│ 60000.0            │
-│ 53000.0            │
-│ 68000.0            │
-│ 47000.0            │
-│ 71000.0            │
-│ 54000.0            │
-│ 49000.0            │
-│ 63000.0            │
-└────────────────────┘
+select *, ROUND(salario, 2) AS "salario redondeado" from empleados;
+┌────┬───────────┬─────────┬──────────────────┬────────────────────┐
+│ id │  nombre   │ salario │   departamento   │ salario redondeado │
+├────┼───────────┼─────────┼──────────────────┼────────────────────┤
+│ 1  │ Juan      │ 50000.0 │ Ventas           │ 50000.0            │
+│ 2  │ María     │ 60000.0 │ TI               │ 60000.0            │
+│ 3  │ Carlos    │ 55000.0 │ Ventas           │ 55000.0            │
+│ 4  │ Ana       │ 48000.0 │ Recursos Humanos │ 48000.0            │
+│ 5  │ Pedro     │ 70000.0 │ TI               │ 70000.0            │
+│ 6  │ Laura     │ 52000.0 │ Ventas           │ 52000.0            │
+│ 7  │ Javier    │ 48000.0 │ Recursos Humanos │ 48000.0            │
+│ 8  │ Carmen    │ 65000.0 │ TI               │ 65000.0            │
+│ 9  │ Miguel    │ 51000.0 │ Ventas           │ 51000.0            │
+│ 10 │ Elena     │ 55000.0 │ Recursos Humanos │ 55000.0            │
+│ 11 │ Diego     │ 72000.0 │ TI               │ 72000.0            │
+│ 12 │ Sofía     │ 49000.0 │ Ventas           │ 49000.0            │
+│ 13 │ Andrés    │ 60000.0 │ Recursos Humanos │ 60000.0            │
+│ 14 │ Isabel    │ 53000.0 │ TI               │ 53000.0            │
+│ 15 │ Raúl      │ 68000.0 │ Ventas           │ 68000.0            │
+│ 16 │ Patricia  │ 47000.0 │ Recursos Humanos │ 47000.0            │
+│ 17 │ Alejandro │ 71000.0 │ TI               │ 71000.0            │
+│ 18 │ Natalia   │ 54000.0 │ Ventas           │ 54000.0            │
+│ 19 │ Roberto   │ 49000.0 │ Recursos Humanos │ 49000.0            │
+│ 20 │ Beatriz   │ 63000.0 │ TI               │ 63000.0            │
+└────┴───────────┴─────────┴──────────────────┴────────────────────┘
 ```
 
 10. Muestra la longitud de cada nombre de empleado.
@@ -229,12 +230,14 @@ select nombre, LENGTH(nombre) AS Longitud from empleados;
 
 11. Cuenta el número total de empleados en cada departamento.
 ```sql
-select COUNT(id) AS "Numero de empleados" from empleados;
-┌─────────────────────┐
-│ Numero de empleados │
-├─────────────────────┤
-│ 20                  │
-└─────────────────────┘
+select departamento, COUNT(id) AS "Numero de empleados" from empleados group by departamento;
+┌──────────────────┬─────────────────────┐
+│   departamento   │ Numero de empleados │
+├──────────────────┼─────────────────────┤
+│ Recursos Humanos │ 6                   │
+│ TI               │ 7                   │
+│ Ventas           │ 7                   │
+└──────────────────┴─────────────────────┘
 ```
 
 12. Muestra la hora actual.
