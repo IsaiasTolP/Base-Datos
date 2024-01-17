@@ -345,19 +345,130 @@ where nombre LIKE '%a%' order by salario;
 ```
 
 17. Empleados en el departamento 'Recursos Humanos' con salarios entre 45000 y 55000.
+```sql
+select nombre, departamento, salario from empleados
+where departamento="Recursos Humanos" and salario BETWEEN 45000 and 55000;
+┌──────────┬──────────────────┬─────────┐
+│  nombre  │   departamento   │ salario │
+├──────────┼──────────────────┼─────────┤
+│ Ana      │ Recursos Humanos │ 48000.0 │
+│ Javier   │ Recursos Humanos │ 48000.0 │
+│ Elena    │ Recursos Humanos │ 55000.0 │
+│ Patricia │ Recursos Humanos │ 47000.0 │
+│ Roberto  │ Recursos Humanos │ 49000.0 │
+└──────────┴──────────────────┴─────────┘
+```
 
 18. Empleados con salarios en orden descendente, limitando a los primeros 5 resultados.
+```sql
+select nombre, salario from empleados order by salario DESC LIMIT 5;
+┌───────────┬─────────┐
+│  nombre   │ salario │
+├───────────┼─────────┤
+│ Diego     │ 72000.0 │
+│ Alejandro │ 71000.0 │
+│ Pedro     │ 70000.0 │
+│ Raúl      │ 68000.0 │
+│ Carmen    │ 65000.0 │
+└───────────┴─────────┘
+```
 
 19. Empleados cuyos nombres comienzan con 'M' o 'N' y tienen salarios superiores a 50000.
+```sql
+select nombre, salario from empleados where nombre LIKE 'M%' or 'N%' and salario > 50000;
+┌────────┬─────────┐
+│ nombre │ salario │
+├────────┼─────────┤
+│ María  │ 60000.0 │
+│ Miguel │ 51000.0 │
+└────────┴─────────┘
+```
 
 20. Empleados en el departamento 'TI' o 'Ventas' ordenados alfabéticamente por nombre.
+```sql
+select * from empleados where departamento = 'TI' or 'Ventas' order by nombre;
+┌────┬───────────┬─────────┬──────────────┐
+│ id │  nombre   │ salario │ departamento │
+├────┼───────────┼─────────┼──────────────┤
+│ 17 │ Alejandro │ 71000.0 │ TI           │
+│ 20 │ Beatriz   │ 63000.0 │ TI           │
+│ 8  │ Carmen    │ 65000.0 │ TI           │
+│ 11 │ Diego     │ 72000.0 │ TI           │
+│ 14 │ Isabel    │ 53000.0 │ TI           │
+│ 2  │ María     │ 60000.0 │ TI           │
+│ 5  │ Pedro     │ 70000.0 │ TI           │
+└────┴───────────┴─────────┴──────────────┘
+```
 
 21. Empleados con salarios únicos (eliminando duplicados) en orden ascendente.
+```sql
+select nombre, salario from empleados group by salario order by salario ASC;
+┌───────────┬─────────┐
+│  nombre   │ salario │
+├───────────┼─────────┤
+│ Patricia  │ 47000.0 │
+│ Ana       │ 48000.0 │
+│ Sofía     │ 49000.0 │
+│ Juan      │ 50000.0 │
+│ Miguel    │ 51000.0 │
+│ Laura     │ 52000.0 │
+│ Isabel    │ 53000.0 │
+│ Natalia   │ 54000.0 │
+│ Carlos    │ 55000.0 │
+│ María     │ 60000.0 │
+│ Beatriz   │ 63000.0 │
+│ Carmen    │ 65000.0 │
+│ Raúl      │ 68000.0 │
+│ Pedro     │ 70000.0 │
+│ Alejandro │ 71000.0 │
+│ Diego     │ 72000.0 │
+└───────────┴─────────┘
+```
 
 22. Empleados cuyos nombres terminan con 'o' o 'a' y están en el departamento 'Ventas'.
+```sql
+select * from empleados where nombre LIKE '%o' or '%a' and departamento = 'Ventas';
+┌────┬───────────┬─────────┬──────────────────┐
+│ id │  nombre   │ salario │   departamento   │
+├────┼───────────┼─────────┼──────────────────┤
+│ 5  │ Pedro     │ 70000.0 │ TI               │
+│ 11 │ Diego     │ 72000.0 │ TI               │
+│ 17 │ Alejandro │ 71000.0 │ TI               │
+│ 19 │ Roberto   │ 49000.0 │ Recursos Humanos │
+└────┴───────────┴─────────┴──────────────────┘
+```
 
 23. Empleados con salarios fuera del rango de 55000 a 70000, ordenados por departamento.
+```sql
+select * from empleados where salario NOT BETWEEN 55000 and 70000 order by departamento;
+┌────┬───────────┬─────────┬──────────────────┐
+│ id │  nombre   │ salario │   departamento   │
+├────┼───────────┼─────────┼──────────────────┤
+│ 4  │ Ana       │ 48000.0 │ Recursos Humanos │
+│ 7  │ Javier    │ 48000.0 │ Recursos Humanos │
+│ 16 │ Patricia  │ 47000.0 │ Recursos Humanos │
+│ 19 │ Roberto   │ 49000.0 │ Recursos Humanos │
+│ 11 │ Diego     │ 72000.0 │ TI               │
+│ 14 │ Isabel    │ 53000.0 │ TI               │
+│ 17 │ Alejandro │ 71000.0 │ TI               │
+│ 1  │ Juan      │ 50000.0 │ Ventas           │
+│ 6  │ Laura     │ 52000.0 │ Ventas           │
+│ 9  │ Miguel    │ 51000.0 │ Ventas           │
+│ 12 │ Sofía     │ 49000.0 │ Ventas           │
+│ 18 │ Natalia   │ 54000.0 │ Ventas           │
+└────┴───────────┴─────────┴──────────────────┘
+```
 
 24. Empleados en el departamento 'Recursos Humanos' con nombres que no contienen la letra 'e'.
+```sql
+select * from empleados where departamento = 'Recursos Humanos' and nombre not LIKE '%e%' or '%é%' or '%E%';
+┌────┬──────────┬─────────┬──────────────────┐
+│ id │  nombre  │ salario │   departamento   │
+├────┼──────────┼─────────┼──────────────────┤
+│ 4  │ Ana      │ 48000.0 │ Recursos Humanos │
+│ 13 │ Andrés   │ 60000.0 │ Recursos Humanos │
+│ 16 │ Patricia │ 47000.0 │ Recursos Humanos │
+└────┴──────────┴─────────┴──────────────────┘
+```
 
 </div>
