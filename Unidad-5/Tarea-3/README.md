@@ -1,7 +1,13 @@
 <div align="justify">
 
-# <div align="center">Consultas en SQLite</div>
+# <div align="center">Tarea 3, Consultas en SQLite</div>
 
+![Logo SQLite](../Tarea-2/img/SQLite-logo.png)
+
+## Índice
+1. Crear la base de datos.
+2. Consultas en SQLite.
+  
 ## Crear la base de datos
 Tenemos el fichero [empleados-dump.sql](empleados-dump.sql), con el contenido de la base de datos. Entonces lo que hay que hacer es abrir SQLite con ```sqlite tarea3.db``` y una vez dentro escribimos: 
 ```sql
