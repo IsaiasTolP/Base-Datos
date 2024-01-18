@@ -380,8 +380,23 @@ select * from productos where nombre LIKE "%o";
 ```
 25. Encontrar los productos que han sido vendidos en más de una fecha.
 ```sql
-select p.* from productos AS p, ventas AS v where p.id=v.id_producto and ;
+select p.* from productos AS p, ventas AS v where p.id=v.id_producto and 2 <= (select COUNT(id_producto) from ventas group by id_producto);
 
+'NO HAY RESPUESTA, es decir los productos solo se han vendido en una fecha concreta. Podemos verlo perfectamente si imprimimos la tabla de ventas'
+┌────┬─────────────┬──────────┬────────────┐
+│ id │ id_producto │ cantidad │   fecha    │
+├────┼─────────────┼──────────┼────────────┤
+│ 1  │ 1           │ 5        │ 2024-01-17 │
+│ 2  │ 2           │ 3        │ 2024-01-17 │
+│ 3  │ 4           │ 2        │ 2024-01-17 │
+│ 4  │ 5           │ 1        │ 2024-01-17 │
+│ 5  │ 6           │ 10       │ 2024-01-18 │
+│ 6  │ 8           │ 4        │ 2024-01-18 │
+│ 7  │ 10          │ 2        │ 2024-01-18 │
+│ 8  │ 14          │ 7        │ 2024-01-19 │
+│ 9  │ 16          │ 3        │ 2024-01-19 │
+│ 10 │ 18          │ 6        │ 2024-01-20 │
+└────┴─────────────┴──────────┴────────────┘ 
 ```
 26. Listar los productos cuya categoría comienza con la letra 'L'.
 ```sql
