@@ -15,6 +15,23 @@ Tenemos el fichero [supermecado-dump.sql](supermercado-dump.sql), con el conteni
 ```
 Esto volcará los datos del fichero sql a la base de datos.
 
+## Modelos y Normalización de la base de datos
+
+### Modelo Entidad relación
+
+![Entidad Relacion](Modelo-ER.drawio.png)
+
+### Modelo Relacional
+
+![Modelo Relacional](Modelo-R.drawio.png)
+
+### Normalización
+1. 1FN: Ambas tablas cumplen la primera forma normal, si nos fijamos los datos están completamente atomizados, sin multiples entradas en una fila o columna.
+2. 2FN: También nos podemos dar cuenta de que ambas tablas están en segunda forma normal, tenemos una clave principal que es el ID de los productos que nos permite mantener en todo momento la consistencia de la base de datos.
+3. 3FN: Como podemos ver todavía existen problemas en la base de datos, como lo son las dependencias transitivas, atributos como fecha o categoría podemos ver que se repiten, lo que ralentiza nuestras consultas en la base de datos.
+
+![Normalización 3FN](Normalizar-3FN.drawio.png)
+
 ## Haciendo consultas
 
 1. Mostrar todos los productos de la categoría "Bebidas".
