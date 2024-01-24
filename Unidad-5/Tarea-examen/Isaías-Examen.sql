@@ -2,33 +2,60 @@
 Actualizar el nivel de Bulbasaur.
 **/
 update Pokemon set nivel=30 where nombre='Bulbasaur';
-
+/**
+Su nivel ahora es 30
+┌────┬───────────┬─────────┬───────┐
+│ id │  nombre   │ id_tipo │ nivel │
+├────┼───────────┼─────────┼───────┤
+│ 1  │ Bulbasaur │ 3       │ 30    │
+└────┴───────────┴─────────┴───────┘
+**/
 
 /**
 Cambiar el tipo de Pikachu a "Eléctrico/Rojo"
 **/
 update tipo as t set nombre='Electrico/Rojo' from Pokemon as p where p.id_tipo=t.id and p.nombre='Pikachu';
-
+/**
+Su tipo ahora es Electrico/Rojo
+┌─────────┬────────────────┐
+│ nombre  │     nombre     │
+├─────────┼────────────────┤
+│ Pikachu │ Electrico/Rojo │
+└─────────┴────────────────┘
+**/
 
 /**
 Incrementar el nivel de todos los Pokémon de tipo Agua.
 **/
 update Pokemon as p set nivel = nivel + 1 from tipo as t where t.nombre='Agua' and p.id_tipo=t.id;
-
+/**
+select p.* from Pokemon as p, tipo as t where p.id_tipo=t.id and t.nombre='Agua';
+Su nivel ahora es 1 más
+┌────┬───────────┬─────────┬───────┐
+│ id │  nombre   │ id_tipo │ nivel │
+├────┼───────────┼─────────┼───────┤
+│ 3  │ Squirtle  │ 1       │ 9     │
+│ 6  │ Vaporeon  │ 1       │ 26    │
+│ 11 │ Gyarados  │ 1       │ 31    │
+│ 18 │ Blastoise │ 1       │ 56    │
+└────┴───────────┴─────────┴───────┘
+**/
 
 /**
 Eliminar a Jynx de la lista de Pokémon.
 **/
 delete from Pokemon where nombre='Jynx';
-
+/**
+No hay pokemon llamado Jynx
+**/
 
 /**
 Eliminar el tipo "Hielo" de la lista de tipos de Pokémon.
 **/
-
-
 delete from tipo where nombre='Hielo';
-
+/**
+Los tipo 'Hielo' no existen.
+**/
 
 /**
 Obtener todos los Pokémon.
@@ -203,7 +230,12 @@ Actualizar el nombre de Bulbasaur a "Bulbasaur Nv. 15":
 **/
 update Pokemon set nombre='Bulbasaur Nv.15' where nombre='Bulbasaur';
 /**
-
+select * from Pokemon where nombre='Bulbasaur Nv.15';
+┌────┬─────────────────┬─────────┬───────┐
+│ id │     nombre      │ id_tipo │ nivel │
+├────┼─────────────────┼─────────┼───────┤
+│ 1  │ Bulbasaur Nv.15 │ 3       │ 30    │
+└────┴─────────────────┴─────────┴───────┘
 **/
 
 /**
@@ -224,7 +256,13 @@ Eliminar todos los Pokémon de nivel 40.
 **/
 delete from Pokemon where nivel=40;
 /**
-
+select * from Pokemon where nivel=40;
+Borramos este pokemon.
+┌────┬───────────┬─────────┬───────┐
+│ id │  nombre   │ id_tipo │ nivel │
+├────┼───────────┼─────────┼───────┤
+│ 13 │ Exeggutor │ 3       │ 40    │
+└────┴───────────┴─────────┴───────┘
 **/
 
 /**
@@ -273,9 +311,19 @@ sqlite> select * from tipo;
 /**
 Eliminar todos los Pokémon de tipo Planta.
 **/
-delete from Pokemon where (select nombre from tipo)='Planta' and id_tipo=(select id from tipo);
+delete from Pokemon where id_tipo in (select id from tipo where nombre='Planta');
 /**
-
+select * from Pokemon where id_tipo in (select id from tipo where nombre='Planta');
+Borramos esto
+┌────┬─────────────────┬─────────┬───────┐
+│ id │     nombre      │ id_tipo │ nivel │
+├────┼─────────────────┼─────────┼───────┤
+│ 1  │ Bulbasaur Nv.15 │ 3       │ 30    │
+│ 8  │ Ivysaur         │ 3       │ 18    │
+│ 13 │ Exeggutor       │ 3       │ 40    │
+│ 16 │ Venusaur        │ 3       │ 45    │
+│ 23 │ Venusaur        │ 3       │ 70    │
+└────┴─────────────────┴─────────┴───────┘
 **/
 
 /**
