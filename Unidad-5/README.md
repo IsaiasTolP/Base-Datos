@@ -73,9 +73,9 @@ Es bastante sencilla de usar solo tenemos que señalarle la tabla y el punto con
 
 ## Como mostrar datos de la tabla
 Para este apartado revisa las tareas de consultas, tienen de casi todas las clases y además se puede repasar las otras sentencias:
-[Tarea 1](Tarea-1/README.md)
-[Tarea 2](Tarea-2/README.md)
-[Tarea 3](Tarea-3/README.md)
-[Tarea 4](Tarea-4/README.md)
+- [Tarea 1](Tarea-1/README.md)
+- [Tarea 2](Tarea-2/README.md)
+- [Tarea 3](Tarea-3/README.md)
+- [Tarea 4](Tarea-4/README.md)
 
 </div>
