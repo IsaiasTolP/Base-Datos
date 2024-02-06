@@ -31,6 +31,13 @@ CREATE TABLE IF NOT EXISTS ventas (
     FOREIGN KEY (id_coche) REFERENCES coches(id_coche)
 );
 
+CREATE TABLE IF NOT EXISTS reparación (
+    id_cliente REFERENCES clientes,
+    id_coche REFERENCES coches,
+    fecha_reparación DATE,
+    descripción TEXT
+);
+
 
 
 INSERT INTO clientes (nombre, edad, direccion) VALUES
