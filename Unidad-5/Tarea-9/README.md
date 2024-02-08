@@ -2,6 +2,7 @@
 
 # <div align="center">Consultas Tarea 9</div>
 
+```sql
 -- Obtener el nombre del alumno y el nombre de la clase en la que está inscrito.
 select a.nombre, c.nombre from clases as c, alumnos as a INNER JOIN inscripciones as i ON a.id=i.id_alumno and c.id=i.id_clase;
 /**
@@ -179,5 +180,6 @@ select id_clase, COUNT(id_alumno) as "Alumnos en clase" from inscripciones group
 │ 10       │ 1                │
 └──────────┴──────────────────┘
 **/
+```
 
 </div>
