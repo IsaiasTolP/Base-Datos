@@ -173,7 +173,21 @@ select  codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega from pedido
 └───────────────┴────────────────┴────────────────┴───────────────┘
 **/
 -- Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
-select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega from pedido where
+select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega from pedido where fecha_entrega<=DATE(fecha_esperada, '-2 day');
+/**
+┌───────────────┬────────────────┬────────────────┬───────────────┐
+│ codigo_pedido │ codigo_cliente │ fecha_esperada │ fecha_entrega │
+├───────────────┼────────────────┼────────────────┼───────────────┤
+│ 2             │ 5              │ 2007-10-28     │ 2007-10-26    │
+│ 24            │ 14             │ 2008-07-31     │ 2008-07-25    │
+│ 30            │ 13             │ 2008-09-03     │ 2008-08-31    │
+│ 36            │ 14             │ 2008-12-15     │ 2008-12-10    │
+│ 53            │ 13             │ 2008-11-15     │ 2008-11-09    │
+│ 89            │ 35             │ 2007-12-13     │ 2007-12-10    │
+│ 91            │ 27             │ 2009-03-29     │ 2009-03-27    │
+│ 93            │ 27             │ 2009-05-30     │ 2009-05-17    │
+└───────────────┴────────────────┴────────────────┴───────────────┘
+**/
 -- Devuelve un listado de todos los pedidos que fueron rechazados en 2009.
 select * from pedido where estado='Rechazado' and fecha_entrega regexp '2009';
 /**
@@ -243,9 +257,10 @@ select DISTINCT(forma_pago) from pago;
 └───────────────┘
 **/
 -- Devuelve un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
--- Quito la descripción porque se muy mal la tabla.
+
 select codigo_producto, nombre, gama, dimensiones, proveedor, precio_proveedor, precio_venta, cantidad_en_stock from producto where gama='Ornamentales' and cantidad_en_stock>100 order by precio_venta DESC;
 /**
+Quito la descripción porque se muy mal la tabla.
 ┌─────────────────┬──────────────────────────────────────────────┬──────────────┬─────────────┬──────────────────┬──────────────────┬──────────────┬───────────────────┐
 │ codigo_producto │                    nombre                    │     gama     │ dimensiones │    proveedor     │ precio_proveedor │ precio_venta │ cantidad_en_stock │
 ├─────────────────┼──────────────────────────────────────────────┼──────────────┼─────────────┼──────────────────┼──────────────────┼──────────────┼───────────────────┤
@@ -5483,12 +5498,228 @@ select * from producto where codigo_producto IN (select codigo_producto from det
 
 ```sql
 -- Devuelve el listado de clientes indicando el nombre del cliente y cuántos pedidos ha realizado. Tenga en cuenta que pueden existir clientes que no han realizado ningún pedido.
+select c.nombre_cliente, COUNT(p.codigo_pedido) as "Numero pedidos" from cliente as c LEFT JOIN pedido as p ON c.codigo_cliente=p.codigo_cliente group by c.codigo_cliente;
+/**
+┌────────────────────────────────┬────────────────┐
+│         nombre_cliente         │ Numero pedidos │
+├────────────────────────────────┼────────────────┤
+│ GoldFish Garden                │ 11             │
+│ Gardening Associates           │ 9              │
+│ Gerudo Valley                  │ 5              │
+│ Tendo Garden                   │ 5              │
+│ Lasas S.A.                     │ 0              │
+│ Beragua                        │ 5              │
+│ Club Golf Puerta del hierro    │ 0              │
+│ Naturagua                      │ 5              │
+│ DaraDistribuciones             │ 0              │
+│ Madrileña de riegos            │ 0              │
+│ Lasas S.A.                     │ 0              │
+│ Camunas Jardines S.L.          │ 5              │
+│ Dardena S.A.                   │ 5              │
+│ Jardin de Flores               │ 5              │
+│ Flores Marivi                  │ 10             │
+│ Flowers, S.A                   │ 0              │
+│ Naturajardin                   │ 0              │
+│ Golf S.A.                      │ 5              │
+│ Americh Golf Management SL     │ 0              │
+│ Aloha                          │ 0              │
+│ El Prat                        │ 0              │
+│ Sotogrande                     │ 5              │
+│ Vivero Humanes                 │ 0              │
+│ Fuenla City                    │ 0              │
+│ Jardines y Mansiones Cactus SL │ 5              │
+│ Jardinerías Matías SL          │ 5              │
+│ Agrojardin                     │ 5              │
+│ Top Campo                      │ 0              │
+│ Jardineria Sara                │ 10             │
+│ Campohermoso                   │ 0              │
+│ france telecom                 │ 0              │
+│ Musée du Louvre                │ 0              │
+│ Tutifruti S.A                  │ 5              │
+│ Flores S.L.                    │ 5              │
+│ The Magic Garden               │ 0              │
+│ El Jardin Viviente S.L         │ 5              │
+└────────────────────────────────┴────────────────┘
+**/
 -- Devuelve un listado con los nombres de los clientes y el total pagado por cada uno de ellos. Tenga en cuenta que pueden existir clientes que no han realizado ningún pago.
+select c.nombre_cliente, SUM(p.total) as "Total pagado" from cliente as c LEFT JOIN pago as p ON c.codigo_cliente=p.codigo_cliente group by c.codigo_cliente;
+/**
+┌────────────────────────────────┬──────────────┐
+│         nombre_cliente         │ Total pagado │
+├────────────────────────────────┼──────────────┤
+│ GoldFish Garden                │ 4000         │
+│ Gardening Associates           │ 10926        │
+│ Gerudo Valley                  │ 81849        │
+│ Tendo Garden                   │ 23794        │
+│ Lasas S.A.                     │              │
+│ Beragua                        │ 2390         │
+│ Club Golf Puerta del hierro    │              │
+│ Naturagua                      │ 929          │
+│ DaraDistribuciones             │              │
+│ Madrileña de riegos            │              │
+│ Lasas S.A.                     │              │
+│ Camunas Jardines S.L.          │ 2246         │
+│ Dardena S.A.                   │ 4160         │
+│ Jardin de Flores               │ 12081        │
+│ Flores Marivi                  │ 4399         │
+│ Flowers, S.A                   │              │
+│ Naturajardin                   │              │
+│ Golf S.A.                      │ 232          │
+│ Americh Golf Management SL     │              │
+│ Aloha                          │              │
+│ El Prat                        │              │
+│ Sotogrande                     │ 272          │
+│ Vivero Humanes                 │              │
+│ Fuenla City                    │              │
+│ Jardines y Mansiones Cactus SL │ 18846        │
+│ Jardinerías Matías SL          │ 10972        │
+│ Agrojardin                     │ 8489         │
+│ Top Campo                      │              │
+│ Jardineria Sara                │ 7863         │
+│ Campohermoso                   │              │
+│ france telecom                 │              │
+│ Musée du Louvre                │              │
+│ Tutifruti S.A                  │ 3321         │
+│ Flores S.L.                    │              │
+│ The Magic Garden               │              │
+│ El Jardin Viviente S.L         │ 1171         │
+└────────────────────────────────┴──────────────┘
+**/
 -- Devuelve el nombre de los clientes que hayan hecho pedidos en 2008 ordenados alfabéticamente de menor a mayor.
+select DISTINCT(c.nombre_cliente) from cliente as c, pedido as p where c.codigo_cliente=p.codigo_cliente and p.fecha_pedido regexp '2008' order by c.nombre_cliente ASC;
+/**
+┌────────────────────────────────┐
+│         nombre_cliente         │
+├────────────────────────────────┤
+│ Camunas Jardines S.L.          │
+│ Dardena S.A.                   │
+│ El Jardin Viviente S.L         │
+│ Flores Marivi                  │
+│ Flores S.L.                    │
+│ Gerudo Valley                  │
+│ GoldFish Garden                │
+│ Jardin de Flores               │
+│ Jardines y Mansiones Cactus SL │
+│ Tendo Garden                   │
+│ Tutifruti S.A                  │
+└────────────────────────────────┘
+**/
 -- Devuelve el nombre del cliente, el nombre y primer apellido de su representante de ventas y el número de teléfono de la oficina del representante de ventas, de aquellos clientes que no hayan realizado ningún pago.
+select c.nombre_cliente, e.nombre, e.apellido1, o.telefono from cliente as c, empleado as e, oficina as o
+where c.codigo_empleado_rep_ventas=e.codigo_empleado and e.codigo_oficina=o.codigo_oficina and c.codigo_cliente NOT IN (select codigo_cliente from pago);
+/**
+┌─────────────────────────────┬─────────────┬────────────┬─────────────────┐
+│       nombre_cliente        │   nombre    │ apellido1  │    telefono     │
+├─────────────────────────────┼─────────────┼────────────┼─────────────────┤
+│ Lasas S.A.                  │ Mariano     │ López      │ +34 91 7514487  │
+│ Club Golf Puerta del hierro │ Emmanuel    │ Magaña     │ +34 93 3561182  │
+│ DaraDistribuciones          │ Emmanuel    │ Magaña     │ +34 93 3561182  │
+│ Madrileña de riegos         │ Emmanuel    │ Magaña     │ +34 93 3561182  │
+│ Lasas S.A.                  │ Mariano     │ López      │ +34 91 7514487  │
+│ Flowers, S.A                │ Felipe      │ Rosas      │ +34 925 867231  │
+│ Naturajardin                │ Julian      │ Bellinelli │ +61 2 9264 2451 │
+│ Americh Golf Management SL  │ José Manuel │ Martinez   │ +34 93 3561182  │
+│ Aloha                       │ José Manuel │ Martinez   │ +34 93 3561182  │
+│ El Prat                     │ José Manuel │ Martinez   │ +34 93 3561182  │
+│ Vivero Humanes              │ Julian      │ Bellinelli │ +61 2 9264 2451 │
+│ Fuenla City                 │ Felipe      │ Rosas      │ +34 925 867231  │
+│ Top Campo                   │ Felipe      │ Rosas      │ +34 925 867231  │
+│ Campohermoso                │ Julian      │ Bellinelli │ +61 2 9264 2451 │
+│ france telecom              │ Lionel      │ Narvaez    │ +33 14 723 4404 │
+│ Musée du Louvre             │ Lionel      │ Narvaez    │ +33 14 723 4404 │
+│ Flores S.L.                 │ Michael     │ Bolton     │ +1 650 219 4782 │
+│ The Magic Garden            │ Michael     │ Bolton     │ +1 650 219 4782 │
+└─────────────────────────────┴─────────────┴────────────┴─────────────────┘
+**/
 -- Devuelve el listado de clientes donde aparezca el nombre del cliente, el nombre y primer apellido de su representante de ventas y la ciudad donde está su oficina.
+select c.nombre_cliente, e.nombre, e.apellido1, o.ciudad from cliente as c, empleado as e, oficina as o where c.codigo_empleado_rep_ventas=e.codigo_empleado and e.codigo_oficina=o.codigo_oficina;
+/**
+┌────────────────────────────────┬─────────────────┬────────────┬──────────────────────┐
+│         nombre_cliente         │     nombre      │ apellido1  │        ciudad        │
+├────────────────────────────────┼─────────────────┼────────────┼──────────────────────┤
+│ GoldFish Garden                │ Walter Santiago │ Sanchez    │ San Francisco        │
+│ Gardening Associates           │ Walter Santiago │ Sanchez    │ San Francisco        │
+│ Gerudo Valley                  │ Lorena          │ Paxton     │ Boston               │
+│ Tendo Garden                   │ Lorena          │ Paxton     │ Boston               │
+│ Lasas S.A.                     │ Mariano         │ López      │ Madrid               │
+│ Beragua                        │ Emmanuel        │ Magaña     │ Barcelona            │
+│ Club Golf Puerta del hierro    │ Emmanuel        │ Magaña     │ Barcelona            │
+│ Naturagua                      │ Emmanuel        │ Magaña     │ Barcelona            │
+│ DaraDistribuciones             │ Emmanuel        │ Magaña     │ Barcelona            │
+│ Madrileña de riegos            │ Emmanuel        │ Magaña     │ Barcelona            │
+│ Lasas S.A.                     │ Mariano         │ López      │ Madrid               │
+│ Camunas Jardines S.L.          │ Mariano         │ López      │ Madrid               │
+│ Dardena S.A.                   │ Mariano         │ López      │ Madrid               │
+│ Jardin de Flores               │ Julian          │ Bellinelli │ Sydney               │
+│ Flores Marivi                  │ Felipe          │ Rosas      │ Talavera de la Reina │
+│ Flowers, S.A                   │ Felipe          │ Rosas      │ Talavera de la Reina │
+│ Naturajardin                   │ Julian          │ Bellinelli │ Sydney               │
+│ Golf S.A.                      │ José Manuel     │ Martinez   │ Barcelona            │
+│ Americh Golf Management SL     │ José Manuel     │ Martinez   │ Barcelona            │
+│ Aloha                          │ José Manuel     │ Martinez   │ Barcelona            │
+│ El Prat                        │ José Manuel     │ Martinez   │ Barcelona            │
+│ Sotogrande                     │ José Manuel     │ Martinez   │ Barcelona            │
+│ Vivero Humanes                 │ Julian          │ Bellinelli │ Sydney               │
+│ Fuenla City                    │ Felipe          │ Rosas      │ Talavera de la Reina │
+│ Jardines y Mansiones Cactus SL │ Lucio           │ Campoamor  │ Madrid               │
+│ Jardinerías Matías SL          │ Lucio           │ Campoamor  │ Madrid               │
+│ Agrojardin                     │ Julian          │ Bellinelli │ Sydney               │
+│ Top Campo                      │ Felipe          │ Rosas      │ Talavera de la Reina │
+│ Jardineria Sara                │ Felipe          │ Rosas      │ Talavera de la Reina │
+│ Campohermoso                   │ Julian          │ Bellinelli │ Sydney               │
+│ france telecom                 │ Lionel          │ Narvaez    │ Paris                │
+│ Musée du Louvre                │ Lionel          │ Narvaez    │ Paris                │
+│ Tutifruti S.A                  │ Mariko          │ Kishi      │ Sydney               │
+│ Flores S.L.                    │ Michael         │ Bolton     │ San Francisco        │
+│ The Magic Garden               │ Michael         │ Bolton     │ San Francisco        │
+│ El Jardin Viviente S.L         │ Mariko          │ Kishi      │ Sydney               │
+└────────────────────────────────┴─────────────────┴────────────┴──────────────────────┘
+**/
 -- Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
+select e.nombre, e.apellido1, e.apellido2, e.puesto, o.telefono from empleado as e, oficina as o where e.codigo_oficina=o.codigo_oficina and e.codigo_empleado NOT IN (select codigo_empleado_rep_ventas from cliente);
+/**
+┌─────────────┬────────────┬───────────┬───────────────────────┬─────────────────┐
+│   nombre    │ apellido1  │ apellido2 │        puesto         │    telefono     │
+├─────────────┼────────────┼───────────┼───────────────────────┼─────────────────┤
+│ Marcos      │ Magaña     │ Perez     │ Director General      │ +34 925 867231  │
+│ Ruben       │ López      │ Martinez  │ Subdirector Marketing │ +34 925 867231  │
+│ Alberto     │ Soria      │ Carrasco  │ Subdirector Ventas    │ +34 925 867231  │
+│ Maria       │ Solís      │ Jerez     │ Secretaria            │ +34 925 867231  │
+│ Juan Carlos │ Ortiz      │ Serrano   │ Representante Ventas  │ +34 925 867231  │
+│ Carlos      │ Soria      │ Jimenez   │ Director Oficina      │ +34 91 7514487  │
+│ Hilario     │ Rodriguez  │ Huertas   │ Representante Ventas  │ +34 91 7514487  │
+│ David       │ Palma      │ Aceituno  │ Representante Ventas  │ +34 93 3561182  │
+│ Oscar       │ Palma      │ Aceituno  │ Representante Ventas  │ +34 93 3561182  │
+│ Francois    │ Fignon     │           │ Director Oficina      │ +33 14 723 4404 │
+│ Laurent     │ Serra      │           │ Representante Ventas  │ +33 14 723 4404 │
+│ Hilary      │ Washington │           │ Director Oficina      │ +1 215 837 0825 │
+│ Marcus      │ Paxton     │           │ Representante Ventas  │ +1 215 837 0825 │
+│ Nei         │ Nishikori  │           │ Director Oficina      │ +81 33 224 5000 │
+│ Narumi      │ Riko       │           │ Representante Ventas  │ +81 33 224 5000 │
+│ Takuma      │ Nomura     │           │ Representante Ventas  │ +81 33 224 5000 │
+│ Amy         │ Johnson    │           │ Director Oficina      │ +44 20 78772041 │
+│ Larry       │ Westfalls  │           │ Representante Ventas  │ +44 20 78772041 │
+│ John        │ Walton     │           │ Representante Ventas  │ +44 20 78772041 │
+│ Kevin       │ Fallmer    │           │ Director Oficina      │ +61 2 9264 2451 │
+└─────────────┴────────────┴───────────┴───────────────────────┴─────────────────┘
+**/
 -- Devuelve un listado indicando todas las ciudades donde hay oficinas y el número de empleados que tiene.
+select o.ciudad, COUNT(e.codigo_empleado) as "Total empleados" from oficina as o, empleado as e where e.codigo_oficina=o.codigo_oficina group by o.ciudad;
+/**
+┌──────────────────────┬─────────────────┐
+│        ciudad        │ Total empleados │
+├──────────────────────┼─────────────────┤
+│ Barcelona            │ 4               │
+│ Boston               │ 3               │
+│ Londres              │ 3               │
+│ Madrid               │ 4               │
+│ Paris                │ 3               │
+│ San Francisco        │ 2               │
+│ Sydney               │ 3               │
+│ Talavera de la Reina │ 6               │
+│ Tokyo                │ 3               │
+└──────────────────────┴─────────────────┘
+**/
 ```
 
 </div>
