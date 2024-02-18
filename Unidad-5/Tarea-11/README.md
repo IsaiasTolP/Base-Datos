@@ -480,13 +480,1514 @@ select c.nombre_cliente, e.nombre, o.ciudad from cliente as c, empleado as e, of
 └────────────────────────────────┴─────────────────┴──────────────────────┘
 **/
 -- Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
-select e.nombre, j.nombre from empleado as e, empleado as j where
+select e.nombre as "Nombre empleado", j.nombre as "Nombre jefe" from empleado as e, empleado as j where e.codigo_jefe=j.codigo_empleado;
+/**
+┌─────────────────┬─────────────┐
+│ Nombre empleado │ Nombre jefe │
+├─────────────────┼─────────────┤
+│ Ruben           │ Marcos      │
+│ Alberto         │ Ruben       │
+│ Maria           │ Ruben       │
+│ Felipe          │ Alberto     │
+│ Juan Carlos     │ Alberto     │
+│ Carlos          │ Alberto     │
+│ Mariano         │ Carlos      │
+│ Lucio           │ Carlos      │
+│ Hilario         │ Carlos      │
+│ Emmanuel        │ Alberto     │
+│ José Manuel     │ Emmanuel    │
+│ David           │ Emmanuel    │
+│ Oscar           │ Emmanuel    │
+│ Francois        │ Alberto     │
+│ Lionel          │ Francois    │
+│ Laurent         │ Francois    │
+│ Michael         │ Alberto     │
+│ Walter Santiago │ Michael     │
+│ Hilary          │ Alberto     │
+│ Marcus          │ Hilary      │
+│ Lorena          │ Hilary      │
+│ Nei             │ Alberto     │
+│ Narumi          │ Nei         │
+│ Takuma          │ Nei         │
+│ Amy             │ Alberto     │
+│ Larry           │ Amy         │
+│ John            │ Amy         │
+│ Kevin           │ Alberto     │
+│ Julian          │ Kevin       │
+│ Mariko          │ Kevin       │
+└─────────────────┴─────────────┘
+**/
 -- Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
-select e.nombre, j.nombre, jj.nombre from  empleado as e, empleado as j, empleado as jj where
+select e.nombre as "Nombre empleado", j.nombre as "Nombre jefe", jj.nombre as "Jefe del jefe" from empleado as e, empleado as j, empleado as jj where e.codigo_jefe=j.codigo_empleado and j.codigo_jefe=jj.codigo_empleado;
+/**
+┌─────────────────┬─────────────┬───────────────┐
+│ Nombre empleado │ Nombre jefe │ Jefe del jefe │
+├─────────────────┼─────────────┼───────────────┤
+│ Alberto         │ Ruben       │ Marcos        │
+│ Maria           │ Ruben       │ Marcos        │
+│ Felipe          │ Alberto     │ Ruben         │
+│ Juan Carlos     │ Alberto     │ Ruben         │
+│ Carlos          │ Alberto     │ Ruben         │
+│ Mariano         │ Carlos      │ Alberto       │
+│ Lucio           │ Carlos      │ Alberto       │
+│ Hilario         │ Carlos      │ Alberto       │
+│ Emmanuel        │ Alberto     │ Ruben         │
+│ José Manuel     │ Emmanuel    │ Alberto       │
+│ David           │ Emmanuel    │ Alberto       │
+│ Oscar           │ Emmanuel    │ Alberto       │
+│ Francois        │ Alberto     │ Ruben         │
+│ Lionel          │ Francois    │ Alberto       │
+│ Laurent         │ Francois    │ Alberto       │
+│ Michael         │ Alberto     │ Ruben         │
+│ Walter Santiago │ Michael     │ Alberto       │
+│ Hilary          │ Alberto     │ Ruben         │
+│ Marcus          │ Hilary      │ Alberto       │
+│ Lorena          │ Hilary      │ Alberto       │
+│ Nei             │ Alberto     │ Ruben         │
+│ Narumi          │ Nei         │ Alberto       │
+│ Takuma          │ Nei         │ Alberto       │
+│ Amy             │ Alberto     │ Ruben         │
+│ Larry           │ Amy         │ Alberto       │
+│ John            │ Amy         │ Alberto       │
+│ Kevin           │ Alberto     │ Ruben         │
+│ Julian          │ Kevin       │ Alberto       │
+│ Mariko          │ Kevin       │ Alberto       │
+└─────────────────┴─────────────┴───────────────┘
+**/
 -- Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
-select c.nombre_cliente from cliente as c, pedido as p where
+select c.nombre_cliente from cliente as c, pedido as p where p.fecha_esperada<p.fecha_entrega and c.codigo_cliente=p.codigo_cliente group by c.nombre_cliente;
+/**
+┌────────────────────────────────┐
+│         nombre_cliente         │
+├────────────────────────────────┤
+│ Beragua                        │
+│ Camunas Jardines S.L.          │
+│ Dardena S.A.                   │
+│ El Jardin Viviente S.L         │
+│ Flores S.L.                    │
+│ Gardening Associates           │
+│ Gerudo Valley                  │
+│ GoldFish Garden                │
+│ Golf S.A.                      │
+│ Jardineria Sara                │
+│ Jardinerías Matías SL          │
+│ Jardines y Mansiones Cactus SL │
+│ Naturagua                      │
+│ Sotogrande                     │
+│ Tutifruti S.A                  │
+└────────────────────────────────┘
+**/
 -- Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
-select c.codigo_cliente, c.nombre_cliente, g.gama from cliente as c, pedidos as p, detalle_pedido as dp, producto as pr, gama as g where
+select c.codigo_cliente, c.nombre_cliente, GROUP_CONCAT(DISTINCT g.gama) as "Gamas compradas" from cliente as c, pedido as p, detalle_pedido as dp, producto as pr, gama_producto as g where c.codigo_cliente=p.codigo_cliente and p.codigo_pedido=dp.codigo_pedido and dp.codigo_producto=pr.codigo_producto and pr.gama=g.gama group by c.codigo_cliente;
+/**
+┌────────────────┬────────────────────────────────┬───────────────────────────────────────────────┐
+│ codigo_cliente │         nombre_cliente         │                Gamas compradas                │
+├────────────────┼────────────────────────────────┼───────────────────────────────────────────────┤
+│ 1              │ GoldFish Garden                │ Frutales,Aromáticas,Ornamentales              │
+│ 3              │ Gardening Associates           │ Frutales,Ornamentales                         │
+│ 4              │ Gerudo Valley                  │ Herramientas,Ornamentales,Frutales            │
+│ 5              │ Tendo Garden                   │ Frutales,Ornamentales,Aromáticas              │
+│ 7              │ Beragua                        │ Herramientas,Frutales,Ornamentales            │
+│ 9              │ Naturagua                      │ Herramientas,Frutales,Ornamentales            │
+│ 13             │ Camunas Jardines S.L.          │ Aromáticas,Frutales,Ornamentales              │
+│ 14             │ Dardena S.A.                   │ Herramientas,Frutales,Ornamentales            │
+│ 15             │ Jardin de Flores               │ Frutales,Ornamentales,Aromáticas,Herramientas │
+│ 16             │ Flores Marivi                  │ Ornamentales,Frutales,Aromáticas,Herramientas │
+│ 19             │ Golf S.A.                      │ Herramientas,Aromáticas                       │
+│ 23             │ Sotogrande                     │ Aromáticas,Frutales                           │
+│ 26             │ Jardines y Mansiones Cactus SL │ Frutales,Ornamentales                         │
+│ 27             │ Jardinerías Matías SL          │ Aromáticas,Frutales,Herramientas              │
+│ 28             │ Agrojardin                     │ Ornamentales,Frutales                         │
+│ 30             │ Jardineria Sara                │ Frutales,Ornamentales,Aromáticas,Herramientas │
+│ 35             │ Tutifruti S.A                  │ Frutales,Ornamentales                         │
+│ 36             │ Flores S.L.                    │ Frutales                                      │
+│ 38             │ El Jardin Viviente S.L         │ Frutales,Ornamentales,Aromáticas,Herramientas │
+└────────────────┴────────────────────────────────┴───────────────────────────────────────────────┘
+**/
+```
+
+## Consultas multitabla (inner join)
+
+```sql
+-- Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+select c.* from cliente as c LEFT JOIN pago as p ON c.codigo_cliente=p.codigo_cliente where p.codigo_cliente is null;
+/**
+┌────────────────┬─────────────────────────────┬─────────────────┬───────────────────┬────────────────┬────────────────┬──────────────────────────┬──────────────────┬──────────────────────┬─────────────┬────────────────┬───────────────┬────────────────────────────┬────────────────┐
+│ codigo_cliente │       nombre_cliente        │ nombre_contacto │ apellido_contacto │    telefono    │      fax       │     linea_direccion1     │ linea_direccion2 │        ciudad        │   region    │      pais      │ codigo_postal │ codigo_empleado_rep_ventas │ limite_credito │
+├────────────────┼─────────────────────────────┼─────────────────┼───────────────────┼────────────────┼────────────────┼──────────────────────────┼──────────────────┼──────────────────────┼─────────────┼────────────────┼───────────────┼────────────────────────────┼────────────────┤
+│ 6              │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid      │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 8              │ Club Golf Puerta del hierro │ Paco            │ Lopez             │ 62456810       │ 919535678      │ C/sinesio delgado        │ Madrid           │ Madrid               │ Madrid      │ Spain          │ 28930         │ 11                         │ 40000          │
+│ 10             │ DaraDistribuciones          │ David           │ Serrano           │ 675598001      │ 916421756      │ C/azores                 │ Fuenlabrada      │ Madrid               │ Madrid      │ Spain          │ 28946         │ 11                         │ 50000          │
+│ 11             │ Madrileña de riegos         │ Jose            │ Tacaño            │ 655983045      │ 916689215      │ C/Lagañas                │ Fuenlabrada      │ Madrid               │ Madrid      │ Spain          │ 28943         │ 11                         │ 20000          │
+│ 12             │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid      │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 17             │ Flowers, S.A                │ Beatriz         │ Fernandez         │ 698754159      │ 978453216      │ C/Luis Salquillo4        │                  │ Montornes del valles │ Barcelona   │ Spain          │ 24586         │ 5                          │ 3500           │
+│ 18             │ Naturajardin                │ Victoria        │ Cruz              │ 612343529      │ 916548735      │ Plaza Magallón 15        │                  │ Madrid               │ Madrid      │ Spain          │ 28011         │ 30                         │ 5050           │
+│ 20             │ Americh Golf Management SL  │ Mario           │ Suarez            │ 964493072      │ 964493063      │ C/Letardo                │                  │ Barcelona            │ Cataluña    │ Spain          │ 12320         │ 12                         │ 20000          │
+│ 21             │ Aloha                       │ Cristian        │ Rodrigez          │ 916485852      │ 914489898      │ C/Roman 3                │                  │ Canarias             │ Canarias    │ Spain          │ 35488         │ 12                         │ 50000          │
+│ 22             │ El Prat                     │ Francisco       │ Camacho           │ 916882323      │ 916493211      │ Avenida Tibidabo         │                  │ Barcelona            │ Cataluña    │ Spain          │ 12320         │ 12                         │ 30000          │
+│ 24             │ Vivero Humanes              │ Federico        │ Gomez             │ 654987690      │ 916040875      │ C/Miguel Echegaray 54    │                  │ Humanes              │ Madrid      │ Spain          │ 28970         │ 30                         │ 7430           │
+│ 25             │ Fuenla City                 │ Tony            │ Muñoz Mena        │ 675842139      │ 915483754      │ C/Callo 52               │                  │ Fuenlabrada          │ Madrid      │ Spain          │ 28574         │ 5                          │ 4500           │
+│ 29             │ Top Campo                   │ Joseluis        │ Sanchez           │ 685746512      │ 974315924      │ C/Ibiza 32               │                  │ Humanes              │ Madrid      │ Spain          │ 28574         │ 5                          │ 5500           │
+│ 31             │ Campohermoso                │ Luis            │ Jimenez           │ 645925376      │ 916159116      │ C/Peru 78                │                  │ Fuenlabrada          │ Madrid      │ Spain          │ 28945         │ 30                         │ 3250           │
+│ 32             │ france telecom              │ FraÃ§ois        │ Toulou            │ (33)5120578961 │ (33)5120578961 │ 6 place d Alleray 15Ã¨me │                  │ Paris                │             │ France         │ 75010         │ 16                         │ 10000          │
+│ 33             │ Musée du Louvre             │ Pierre          │ Delacroux         │ (33)0140205050 │ (33)0140205442 │ Quai du Louvre           │                  │ Paris                │             │ France         │ 75058         │ 16                         │ 30000          │
+│ 36             │ Flores S.L.                 │ Antonio         │ Romero            │ 654352981      │ 685249700      │ Avenida España           │                  │ Madrid               │ Fuenlabrada │ Spain          │ 29643         │ 18                         │ 6000           │
+│ 37             │ The Magic Garden            │ Richard         │ Mcain             │ 926523468      │ 9364875882     │ Lihgting Park            │                  │ London               │ London      │ United Kingdom │ 65930         │ 18                         │ 10000          │
+└────────────────┴─────────────────────────────┴─────────────────┴───────────────────┴────────────────┴────────────────┴──────────────────────────┴──────────────────┴──────────────────────┴─────────────┴────────────────┴───────────────┴────────────────────────────┴────────────────┘
+**/
+-- Devuelve un listado que muestre solamente los clientes que no han realizado ningún pedido.
+select c.* from cliente as c LEFT JOIN pedido as p ON c.codigo_cliente=p.codigo_cliente where p.codigo_cliente is null;
+/**
+┌────────────────┬─────────────────────────────┬─────────────────┬───────────────────┬────────────────┬────────────────┬──────────────────────────┬──────────────────┬──────────────────────┬───────────┬────────────────┬───────────────┬────────────────────────────┬────────────────┐
+│ codigo_cliente │       nombre_cliente        │ nombre_contacto │ apellido_contacto │    telefono    │      fax       │     linea_direccion1     │ linea_direccion2 │        ciudad        │  region   │      pais      │ codigo_postal │ codigo_empleado_rep_ventas │ limite_credito │
+├────────────────┼─────────────────────────────┼─────────────────┼───────────────────┼────────────────┼────────────────┼──────────────────────────┼──────────────────┼──────────────────────┼───────────┼────────────────┼───────────────┼────────────────────────────┼────────────────┤
+│ 6              │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 8              │ Club Golf Puerta del hierro │ Paco            │ Lopez             │ 62456810       │ 919535678      │ C/sinesio delgado        │ Madrid           │ Madrid               │ Madrid    │ Spain          │ 28930         │ 11                         │ 40000          │
+│ 10             │ DaraDistribuciones          │ David           │ Serrano           │ 675598001      │ 916421756      │ C/azores                 │ Fuenlabrada      │ Madrid               │ Madrid    │ Spain          │ 28946         │ 11                         │ 50000          │
+│ 11             │ Madrileña de riegos         │ Jose            │ Tacaño            │ 655983045      │ 916689215      │ C/Lagañas                │ Fuenlabrada      │ Madrid               │ Madrid    │ Spain          │ 28943         │ 11                         │ 20000          │
+│ 12             │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 17             │ Flowers, S.A                │ Beatriz         │ Fernandez         │ 698754159      │ 978453216      │ C/Luis Salquillo4        │                  │ Montornes del valles │ Barcelona │ Spain          │ 24586         │ 5                          │ 3500           │
+│ 18             │ Naturajardin                │ Victoria        │ Cruz              │ 612343529      │ 916548735      │ Plaza Magallón 15        │                  │ Madrid               │ Madrid    │ Spain          │ 28011         │ 30                         │ 5050           │
+│ 20             │ Americh Golf Management SL  │ Mario           │ Suarez            │ 964493072      │ 964493063      │ C/Letardo                │                  │ Barcelona            │ Cataluña  │ Spain          │ 12320         │ 12                         │ 20000          │
+│ 21             │ Aloha                       │ Cristian        │ Rodrigez          │ 916485852      │ 914489898      │ C/Roman 3                │                  │ Canarias             │ Canarias  │ Spain          │ 35488         │ 12                         │ 50000          │
+│ 22             │ El Prat                     │ Francisco       │ Camacho           │ 916882323      │ 916493211      │ Avenida Tibidabo         │                  │ Barcelona            │ Cataluña  │ Spain          │ 12320         │ 12                         │ 30000          │
+│ 24             │ Vivero Humanes              │ Federico        │ Gomez             │ 654987690      │ 916040875      │ C/Miguel Echegaray 54    │                  │ Humanes              │ Madrid    │ Spain          │ 28970         │ 30                         │ 7430           │
+│ 25             │ Fuenla City                 │ Tony            │ Muñoz Mena        │ 675842139      │ 915483754      │ C/Callo 52               │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28574         │ 5                          │ 4500           │
+│ 29             │ Top Campo                   │ Joseluis        │ Sanchez           │ 685746512      │ 974315924      │ C/Ibiza 32               │                  │ Humanes              │ Madrid    │ Spain          │ 28574         │ 5                          │ 5500           │
+│ 31             │ Campohermoso                │ Luis            │ Jimenez           │ 645925376      │ 916159116      │ C/Peru 78                │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 30                         │ 3250           │
+│ 32             │ france telecom              │ FraÃ§ois        │ Toulou            │ (33)5120578961 │ (33)5120578961 │ 6 place d Alleray 15Ã¨me │                  │ Paris                │           │ France         │ 75010         │ 16                         │ 10000          │
+│ 33             │ Musée du Louvre             │ Pierre          │ Delacroux         │ (33)0140205050 │ (33)0140205442 │ Quai du Louvre           │                  │ Paris                │           │ France         │ 75058         │ 16                         │ 30000          │
+│ 37             │ The Magic Garden            │ Richard         │ Mcain             │ 926523468      │ 9364875882     │ Lihgting Park            │                  │ London               │ London    │ United Kingdom │ 65930         │ 18                         │ 10000          │
+└────────────────┴─────────────────────────────┴─────────────────┴───────────────────┴────────────────┴────────────────┴──────────────────────────┴──────────────────┴──────────────────────┴───────────┴────────────────┴───────────────┴────────────────────────────┴────────────────┘
+**/
+-- Devuelve un listado que muestre los clientes que no han realizado ningún pago y los que no han realizado ningún pedido.
+select c.* from cliente as c LEFT JOIN pago as p ON c.codigo_cliente=p.codigo_cliente 
+LEFT JOIN pedido as pe ON c.codigo_cliente=pe.codigo_cliente 
+where pe.codigo_cliente is null and p.codigo_cliente is null;
+/**
+┌────────────────┬─────────────────────────────┬─────────────────┬───────────────────┬────────────────┬────────────────┬──────────────────────────┬──────────────────┬──────────────────────┬───────────┬────────────────┬───────────────┬────────────────────────────┬────────────────┐
+│ codigo_cliente │       nombre_cliente        │ nombre_contacto │ apellido_contacto │    telefono    │      fax       │     linea_direccion1     │ linea_direccion2 │        ciudad        │  region   │      pais      │ codigo_postal │ codigo_empleado_rep_ventas │ limite_credito │
+├────────────────┼─────────────────────────────┼─────────────────┼───────────────────┼────────────────┼────────────────┼──────────────────────────┼──────────────────┼──────────────────────┼───────────┼────────────────┼───────────────┼────────────────────────────┼────────────────┤
+│ 6              │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 8              │ Club Golf Puerta del hierro │ Paco            │ Lopez             │ 62456810       │ 919535678      │ C/sinesio delgado        │ Madrid           │ Madrid               │ Madrid    │ Spain          │ 28930         │ 11                         │ 40000          │
+│ 10             │ DaraDistribuciones          │ David           │ Serrano           │ 675598001      │ 916421756      │ C/azores                 │ Fuenlabrada      │ Madrid               │ Madrid    │ Spain          │ 28946         │ 11                         │ 50000          │
+│ 11             │ Madrileña de riegos         │ Jose            │ Tacaño            │ 655983045      │ 916689215      │ C/Lagañas                │ Fuenlabrada      │ Madrid               │ Madrid    │ Spain          │ 28943         │ 11                         │ 20000          │
+│ 12             │ Lasas S.A.                  │ Antonio         │ Lasas             │ 34916540145    │ 34914851312    │ C/Leganes 15             │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 8                          │ 154310         │
+│ 17             │ Flowers, S.A                │ Beatriz         │ Fernandez         │ 698754159      │ 978453216      │ C/Luis Salquillo4        │                  │ Montornes del valles │ Barcelona │ Spain          │ 24586         │ 5                          │ 3500           │
+│ 18             │ Naturajardin                │ Victoria        │ Cruz              │ 612343529      │ 916548735      │ Plaza Magallón 15        │                  │ Madrid               │ Madrid    │ Spain          │ 28011         │ 30                         │ 5050           │
+│ 20             │ Americh Golf Management SL  │ Mario           │ Suarez            │ 964493072      │ 964493063      │ C/Letardo                │                  │ Barcelona            │ Cataluña  │ Spain          │ 12320         │ 12                         │ 20000          │
+│ 21             │ Aloha                       │ Cristian        │ Rodrigez          │ 916485852      │ 914489898      │ C/Roman 3                │                  │ Canarias             │ Canarias  │ Spain          │ 35488         │ 12                         │ 50000          │
+│ 22             │ El Prat                     │ Francisco       │ Camacho           │ 916882323      │ 916493211      │ Avenida Tibidabo         │                  │ Barcelona            │ Cataluña  │ Spain          │ 12320         │ 12                         │ 30000          │
+│ 24             │ Vivero Humanes              │ Federico        │ Gomez             │ 654987690      │ 916040875      │ C/Miguel Echegaray 54    │                  │ Humanes              │ Madrid    │ Spain          │ 28970         │ 30                         │ 7430           │
+│ 25             │ Fuenla City                 │ Tony            │ Muñoz Mena        │ 675842139      │ 915483754      │ C/Callo 52               │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28574         │ 5                          │ 4500           │
+│ 29             │ Top Campo                   │ Joseluis        │ Sanchez           │ 685746512      │ 974315924      │ C/Ibiza 32               │                  │ Humanes              │ Madrid    │ Spain          │ 28574         │ 5                          │ 5500           │
+│ 31             │ Campohermoso                │ Luis            │ Jimenez           │ 645925376      │ 916159116      │ C/Peru 78                │                  │ Fuenlabrada          │ Madrid    │ Spain          │ 28945         │ 30                         │ 3250           │
+│ 32             │ france telecom              │ FraÃ§ois        │ Toulou            │ (33)5120578961 │ (33)5120578961 │ 6 place d Alleray 15Ã¨me │                  │ Paris                │           │ France         │ 75010         │ 16                         │ 10000          │
+│ 33             │ Musée du Louvre             │ Pierre          │ Delacroux         │ (33)0140205050 │ (33)0140205442 │ Quai du Louvre           │                  │ Paris                │           │ France         │ 75058         │ 16                         │ 30000          │
+│ 37             │ The Magic Garden            │ Richard         │ Mcain             │ 926523468      │ 9364875882     │ Lihgting Park            │                  │ London               │ London    │ United Kingdom │ 65930         │ 18                         │ 10000          │
+└────────────────┴─────────────────────────────┴─────────────────┴───────────────────┴────────────────┴────────────────┴──────────────────────────┴──────────────────┴──────────────────────┴───────────┴────────────────┴───────────────┴────────────────────────────┴────────────────┘
+**/
+-- Devuelve un listado que muestre solamente los empleados que no tienen una oficina asociada.
+select e.* from empleado as e LEFT JOIN oficina as o ON e.codigo_oficina=o.codigo_oficina where o.codigo_oficina is null;
+/**
+Todos los empleados tiene una oficina asociada
+**/
+-- Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado.
+select e.* from empleado as e LEFT JOIN cliente as c ON e.codigo_empleado=c.codigo_empleado_rep_ventas where c.codigo_empleado_rep_ventas is null;
+/**
+┌─────────────────┬─────────────┬────────────┬───────────┬───────────┬───────────────────────────┬────────────────┬─────────────┬───────────────────────┐
+│ codigo_empleado │   nombre    │ apellido1  │ apellido2 │ extension │           email           │ codigo_oficina │ codigo_jefe │        puesto         │
+├─────────────────┼─────────────┼────────────┼───────────┼───────────┼───────────────────────────┼────────────────┼─────────────┼───────────────────────┤
+│ 1               │ Marcos      │ Magaña     │ Perez     │ 3897      │ marcos@jardineria.es      │ TAL-ES         │             │ Director General      │
+│ 2               │ Ruben       │ López      │ Martinez  │ 2899      │ rlopez@jardineria.es      │ TAL-ES         │ 1           │ Subdirector Marketing │
+│ 3               │ Alberto     │ Soria      │ Carrasco  │ 2837      │ asoria@jardineria.es      │ TAL-ES         │ 2           │ Subdirector Ventas    │
+│ 4               │ Maria       │ Solís      │ Jerez     │ 2847      │ msolis@jardineria.es      │ TAL-ES         │ 2           │ Secretaria            │
+│ 6               │ Juan Carlos │ Ortiz      │ Serrano   │ 2845      │ cortiz@jardineria.es      │ TAL-ES         │ 3           │ Representante Ventas  │
+│ 7               │ Carlos      │ Soria      │ Jimenez   │ 2444      │ csoria@jardineria.es      │ MAD-ES         │ 3           │ Director Oficina      │
+│ 10              │ Hilario     │ Rodriguez  │ Huertas   │ 2444      │ hrodriguez@jardineria.es  │ MAD-ES         │ 7           │ Representante Ventas  │
+│ 13              │ David       │ Palma      │ Aceituno  │ 2519      │ dpalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │
+│ 14              │ Oscar       │ Palma      │ Aceituno  │ 2519      │ opalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │
+│ 15              │ Francois    │ Fignon     │           │ 9981      │ ffignon@gardening.com     │ PAR-FR         │ 3           │ Director Oficina      │
+│ 17              │ Laurent     │ Serra      │           │ 9982      │ lserra@gardening.com      │ PAR-FR         │ 15          │ Representante Ventas  │
+│ 20              │ Hilary      │ Washington │           │ 7565      │ hwashington@gardening.com │ BOS-USA        │ 3           │ Director Oficina      │
+│ 21              │ Marcus      │ Paxton     │           │ 7565      │ mpaxton@gardening.com     │ BOS-USA        │ 20          │ Representante Ventas  │
+│ 23              │ Nei         │ Nishikori  │           │ 8734      │ nnishikori@gardening.com  │ TOK-JP         │ 3           │ Director Oficina      │
+│ 24              │ Narumi      │ Riko       │           │ 8734      │ nriko@gardening.com       │ TOK-JP         │ 23          │ Representante Ventas  │
+│ 25              │ Takuma      │ Nomura     │           │ 8735      │ tnomura@gardening.com     │ TOK-JP         │ 23          │ Representante Ventas  │
+│ 26              │ Amy         │ Johnson    │           │ 3321      │ ajohnson@gardening.com    │ LON-UK         │ 3           │ Director Oficina      │
+│ 27              │ Larry       │ Westfalls  │           │ 3322      │ lwestfalls@gardening.com  │ LON-UK         │ 26          │ Representante Ventas  │
+│ 28              │ John        │ Walton     │           │ 3322      │ jwalton@gardening.com     │ LON-UK         │ 26          │ Representante Ventas  │
+│ 29              │ Kevin       │ Fallmer    │           │ 3210      │ kfalmer@gardening.com     │ SYD-AU         │ 3           │ Director Oficina      │
+└─────────────────┴─────────────┴────────────┴───────────┴───────────┴───────────────────────────┴────────────────┴─────────────┴───────────────────────┘
+**/
+-- Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado junto con los datos de la oficina donde trabajan.
+select e.*, o.* from empleado as e 
+LEFT JOIN cliente as c ON e.codigo_empleado=c.codigo_empleado_rep_ventas 
+JOIN oficina as o ON e.codigo_oficina=o.codigo_oficina
+where c.codigo_empleado_rep_ventas is null;
+/**
+┌─────────────────┬─────────────┬────────────┬───────────┬───────────┬───────────────────────────┬────────────────┬─────────────┬───────────────────────┬────────────────┬──────────────────────┬────────────┬───────────────────┬───────────────┬─────────────────┬──────────────────────────────┬─────────────────────┐
+│ codigo_empleado │   nombre    │ apellido1  │ apellido2 │ extension │           email           │ codigo_oficina │ codigo_jefe │        puesto         │ codigo_oficina │        ciudad        │    pais    │      region       │ codigo_postal │    telefono     │       linea_direccion1       │  linea_direccion2   │
+├─────────────────┼─────────────┼────────────┼───────────┼───────────┼───────────────────────────┼────────────────┼─────────────┼───────────────────────┼────────────────┼──────────────────────┼────────────┼───────────────────┼───────────────┼─────────────────┼──────────────────────────────┼─────────────────────┤
+│ 1               │ Marcos      │ Magaña     │ Perez     │ 3897      │ marcos@jardineria.es      │ TAL-ES         │             │ Director General      │ TAL-ES         │ Talavera de la Reina │ España     │ Castilla-LaMancha │ 45632         │ +34 925 867231  │ Francisco Aguirre, 32        │ 5º piso (exterior)  │
+│ 2               │ Ruben       │ López      │ Martinez  │ 2899      │ rlopez@jardineria.es      │ TAL-ES         │ 1           │ Subdirector Marketing │ TAL-ES         │ Talavera de la Reina │ España     │ Castilla-LaMancha │ 45632         │ +34 925 867231  │ Francisco Aguirre, 32        │ 5º piso (exterior)  │
+│ 3               │ Alberto     │ Soria      │ Carrasco  │ 2837      │ asoria@jardineria.es      │ TAL-ES         │ 2           │ Subdirector Ventas    │ TAL-ES         │ Talavera de la Reina │ España     │ Castilla-LaMancha │ 45632         │ +34 925 867231  │ Francisco Aguirre, 32        │ 5º piso (exterior)  │
+│ 4               │ Maria       │ Solís      │ Jerez     │ 2847      │ msolis@jardineria.es      │ TAL-ES         │ 2           │ Secretaria            │ TAL-ES         │ Talavera de la Reina │ España     │ Castilla-LaMancha │ 45632         │ +34 925 867231  │ Francisco Aguirre, 32        │ 5º piso (exterior)  │
+│ 6               │ Juan Carlos │ Ortiz      │ Serrano   │ 2845      │ cortiz@jardineria.es      │ TAL-ES         │ 3           │ Representante Ventas  │ TAL-ES         │ Talavera de la Reina │ España     │ Castilla-LaMancha │ 45632         │ +34 925 867231  │ Francisco Aguirre, 32        │ 5º piso (exterior)  │
+│ 7               │ Carlos      │ Soria      │ Jimenez   │ 2444      │ csoria@jardineria.es      │ MAD-ES         │ 3           │ Director Oficina      │ MAD-ES         │ Madrid               │ España     │ Madrid            │ 28032         │ +34 91 7514487  │ Bulevar Indalecio Prieto, 32 │                     │
+│ 10              │ Hilario     │ Rodriguez  │ Huertas   │ 2444      │ hrodriguez@jardineria.es  │ MAD-ES         │ 7           │ Representante Ventas  │ MAD-ES         │ Madrid               │ España     │ Madrid            │ 28032         │ +34 91 7514487  │ Bulevar Indalecio Prieto, 32 │                     │
+│ 13              │ David       │ Palma      │ Aceituno  │ 2519      │ dpalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │ BCN-ES         │ Barcelona            │ España     │ Barcelona         │ 08019         │ +34 93 3561182  │ Avenida Diagonal, 38         │ 3A escalera Derecha │
+│ 14              │ Oscar       │ Palma      │ Aceituno  │ 2519      │ opalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │ BCN-ES         │ Barcelona            │ España     │ Barcelona         │ 08019         │ +34 93 3561182  │ Avenida Diagonal, 38         │ 3A escalera Derecha │
+│ 15              │ Francois    │ Fignon     │           │ 9981      │ ffignon@gardening.com     │ PAR-FR         │ 3           │ Director Oficina      │ PAR-FR         │ Paris                │ Francia    │ EMEA              │ 75017         │ +33 14 723 4404 │ 29 Rue Jouffroy d'abbans     │                     │
+│ 17              │ Laurent     │ Serra      │           │ 9982      │ lserra@gardening.com      │ PAR-FR         │ 15          │ Representante Ventas  │ PAR-FR         │ Paris                │ Francia    │ EMEA              │ 75017         │ +33 14 723 4404 │ 29 Rue Jouffroy d'abbans     │                     │
+│ 20              │ Hilary      │ Washington │           │ 7565      │ hwashington@gardening.com │ BOS-USA        │ 3           │ Director Oficina      │ BOS-USA        │ Boston               │ EEUU       │ MA                │ 02108         │ +1 215 837 0825 │ 1550 Court Place             │ Suite 102           │
+│ 21              │ Marcus      │ Paxton     │           │ 7565      │ mpaxton@gardening.com     │ BOS-USA        │ 20          │ Representante Ventas  │ BOS-USA        │ Boston               │ EEUU       │ MA                │ 02108         │ +1 215 837 0825 │ 1550 Court Place             │ Suite 102           │
+│ 23              │ Nei         │ Nishikori  │           │ 8734      │ nnishikori@gardening.com  │ TOK-JP         │ 3           │ Director Oficina      │ TOK-JP         │ Tokyo                │ Japón      │ Chiyoda-Ku        │ 102-8578      │ +81 33 224 5000 │ 4-1 Kioicho                  │                     │
+│ 24              │ Narumi      │ Riko       │           │ 8734      │ nriko@gardening.com       │ TOK-JP         │ 23          │ Representante Ventas  │ TOK-JP         │ Tokyo                │ Japón      │ Chiyoda-Ku        │ 102-8578      │ +81 33 224 5000 │ 4-1 Kioicho                  │                     │
+│ 25              │ Takuma      │ Nomura     │           │ 8735      │ tnomura@gardening.com     │ TOK-JP         │ 23          │ Representante Ventas  │ TOK-JP         │ Tokyo                │ Japón      │ Chiyoda-Ku        │ 102-8578      │ +81 33 224 5000 │ 4-1 Kioicho                  │                     │
+│ 26              │ Amy         │ Johnson    │           │ 3321      │ ajohnson@gardening.com    │ LON-UK         │ 3           │ Director Oficina      │ LON-UK         │ Londres              │ Inglaterra │ EMEA              │ EC2N 1HN      │ +44 20 78772041 │ 52 Old Broad Street          │ Ground Floor        │
+│ 27              │ Larry       │ Westfalls  │           │ 3322      │ lwestfalls@gardening.com  │ LON-UK         │ 26          │ Representante Ventas  │ LON-UK         │ Londres              │ Inglaterra │ EMEA              │ EC2N 1HN      │ +44 20 78772041 │ 52 Old Broad Street          │ Ground Floor        │
+│ 28              │ John        │ Walton     │           │ 3322      │ jwalton@gardening.com     │ LON-UK         │ 26          │ Representante Ventas  │ LON-UK         │ Londres              │ Inglaterra │ EMEA              │ EC2N 1HN      │ +44 20 78772041 │ 52 Old Broad Street          │ Ground Floor        │
+│ 29              │ Kevin       │ Fallmer    │           │ 3210      │ kfalmer@gardening.com     │ SYD-AU         │ 3           │ Director Oficina      │ SYD-AU         │ Sydney               │ Australia  │ APAC              │ NSW 2010      │ +61 2 9264 2451 │ 5-11 Wentworth Avenue        │ Floor #2            │
+└─────────────────┴─────────────┴────────────┴───────────┴───────────┴───────────────────────────┴────────────────┴─────────────┴───────────────────────┴────────────────┴──────────────────────┴────────────┴───────────────────┴───────────────┴─────────────────┴──────────────────────────────┴─────────────────────┘
+**/
+-- Devuelve un listado que muestre los empleados que no tienen una oficina asociada y los que no tienen un cliente asociado.
+select e.* from empleado as e 
+LEFT JOIN cliente as c ON e.codigo_empleado=c.codigo_empleado_rep_ventas 
+LEFT JOIN oficina as o ON e.codigo_oficina=o.codigo_oficina
+where c.codigo_empleado_rep_ventas is null and o.codigo_oficina is null;
+/**
+Todos los empleados tienen oficina
+**/
+-- Devuelve un listado de los productos que nunca han aparecido en un pedido.
+select pd.* from detalle_pedido as dp
+RIGHT JOIN producto as pd ON dp.codigo_producto=pd.codigo_producto
+where dp.codigo_producto is null;
+/**
+┌─────────────────┬─────────────────────────────────────────────────────────────┬──────────────┬─────────────┬───────────────────────────┬──────────────────────────────────────────────────────────────┬───────────────────┬──────────────┬──────────────────┐
+│ codigo_producto │                           nombre                            │     gama     │ dimensiones │         proveedor         │                         descripcion                          │ cantidad_en_stock │ precio_venta │ precio_proveedor │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-104          │ Olea-Olivos                                                 │ Frutales     │ 12/4        │ Frutales Talavera S.A     │ Existen dos hipótesis sobre el origen del olivo, una que pos │ 50                │ 49           │ 39               │
+│                 │                                                             │              │             │                           │ tula que proviene de las costas de Siria, Líbano e Israel y  │                   │              │                  │
+│                 │                                                             │              │             │                           │ otra que considera que lo considera originario de Asia menor │                   │              │                  │
+│                 │                                                             │              │             │                           │ . La llegada a Europa probablemente tuvo lugar de mano de lo │                   │              │                  │
+│                 │                                                             │              │             │                           │ s Fenicios, en transito por Chipre, Creta, e Islas del Mar E │                   │              │                  │
+│                 │                                                             │              │             │                           │ geo, pasando a Grecia y más tarde a Italia. Los primeros ind │                   │              │                  │
+│                 │                                                             │              │             │                           │ icios de la presencia del olivo en las costas mediterráneas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ españolas coinciden con el dominio romano, aunque fueron pos │                   │              │                  │
+│                 │                                                             │              │             │                           │ teriormente los árabes los que impulsaron su cultivo en Anda │                   │              │                  │
+│                 │                                                             │              │             │                           │ lucía, convirtiendo a España en el primer país productor de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aceite de oliva a nivel mundial.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-14           │ Calamondin Mini                                             │ Frutales     │             │ Frutales Talavera S.A     │ Se trata de un pequeño arbolito de copa densa, con tendencia │ 15                │ 10           │ 8                │
+│                 │                                                             │              │             │                           │  a la verticalidad, inerme o con cortas espinas. Sus hojas s │                   │              │                  │
+│                 │                                                             │              │             │                           │ on pequeñas, elípticas de 5-10 cm de longitud, con los pecío │                   │              │                  │
+│                 │                                                             │              │             │                           │ los estrechamente alados.Posee 1 o 2 flores en situación axi │                   │              │                  │
+│                 │                                                             │              │             │                           │ lar, al final de las ramillas.Sus frutos son muy pequeños (3 │                   │              │                  │
+│                 │                                                             │              │             │                           │ -3,5 cm de diámetro), con pocas semillas, esféricos u ovales │                   │              │                  │
+│                 │                                                             │              │             │                           │ , con la zona apical aplanada; corteza de color naranja-roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zo, muy fina y fácilmente separable de la pulpa, que es dulc │                   │              │                  │
+│                 │                                                             │              │             │                           │ e, ácida y comestible..                                      │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-19           │ Camelia Blanco, Chrysler Rojo, Soraya Naranja,              │ Frutales     │             │ NaranjasValencianas.com   │                                                              │ 350               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-20           │ Landora Amarillo, Rose Gaujard bicolor blanco-rojo          │ Frutales     │             │ Frutales Talavera S.A     │                                                              │ 350               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-21           │ Kordes Perfect bicolor rojo-amarillo, Roundelay rojo fuerte │ Frutales     │             │ Frutales Talavera S.A     │                                                              │ 350               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-24           │ Albaricoquero Corbato                                       │ Frutales     │             │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-25           │ Albaricoquero Moniqui                                       │ Frutales     │             │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-26           │ Albaricoquero Kurrot                                        │ Frutales     │             │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-27           │ Cerezo Burlat                                               │ Frutales     │             │ Jerte Distribuciones S.L. │ Las principales especies de cerezo cultivadas en el mundo so │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │                   │              │                  │
+│                 │                                                             │              │             │                           │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │                   │              │                  │
+│                 │                                                             │              │             │                           │  son naturales del sureste de Europa y oeste de Asia. El cer │                   │              │                  │
+│                 │                                                             │              │             │                           │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │                   │              │                  │
+│                 │                                                             │              │             │                           │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │                   │              │                  │
+│                 │                                                             │              │             │                           │ evado por los pájaros y las migraciones humanas. Fue uno de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ los frutales más apreciados por los griegos y con el Imperio │                   │              │                  │
+│                 │                                                             │              │             │                           │  Romano se extendió a regiones muy diversas. En la actualida │                   │              │                  │
+│                 │                                                             │              │             │                           │ d, el cerezo se encuentra difundido por numerosas regiones y │                   │              │                  │
+│                 │                                                             │              │             │                           │  países del mundo con clima templado                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-28           │ Cerezo Picota                                               │ Frutales     │             │ Jerte Distribuciones S.L. │ Las principales especies de cerezo cultivadas en el mundo so │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │                   │              │                  │
+│                 │                                                             │              │             │                           │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │                   │              │                  │
+│                 │                                                             │              │             │                           │  son naturales del sureste de Europa y oeste de Asia. El cer │                   │              │                  │
+│                 │                                                             │              │             │                           │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │                   │              │                  │
+│                 │                                                             │              │             │                           │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │                   │              │                  │
+│                 │                                                             │              │             │                           │ evado por los pájaros y las migraciones humanas. Fue uno de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ los frutales más apreciados por los griegos y con el Imperio │                   │              │                  │
+│                 │                                                             │              │             │                           │  Romano se extendió a regiones muy diversas. En la actualida │                   │              │                  │
+│                 │                                                             │              │             │                           │ d, el cerezo se encuentra difundido por numerosas regiones y │                   │              │                  │
+│                 │                                                             │              │             │                           │  países del mundo con clima templado                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-30           │ Ciruelo R. Claudia Verde                                    │ Frutales     │             │ Frutales Talavera S.A     │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │                   │              │                  │
+│                 │                                                             │              │             │                           │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │                   │              │                  │
+│                 │                                                             │              │             │                           │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas                                                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-32           │ Ciruelo Golden Japan                                        │ Frutales     │             │ Frutales Talavera S.A     │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │                   │              │                  │
+│                 │                                                             │              │             │                           │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │                   │              │                  │
+│                 │                                                             │              │             │                           │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas                                                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-35           │ Ciruelo Claudia Negra                                       │ Frutales     │             │ Frutales Talavera S.A     │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │                   │              │                  │
+│                 │                                                             │              │             │                           │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │                   │              │                  │
+│                 │                                                             │              │             │                           │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas                                                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-38           │ Higuera Verdal                                              │ Frutales     │             │ Frutales Talavera S.A     │ La higuera (Ficus carica L.) es un árbol típico de secano en │ 400               │ 9            │ 7                │
+│                 │                                                             │              │             │                           │  los países mediterráneos. Su rusticidad y su fácil multipli │                   │              │                  │
+│                 │                                                             │              │             │                           │ cación hacen de la higuera un frutal muy apropiado para el c │                   │              │                  │
+│                 │                                                             │              │             │                           │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │                   │              │                  │
+│                 │                                                             │              │             │                           │ e no requiere cuidado alguno una vez plantado y arraigado, l │                   │              │                  │
+│                 │                                                             │              │             │                           │ imitándose el hombre a recoger de él los frutos cuando madur │                   │              │                  │
+│                 │                                                             │              │             │                           │ an, unos para consumo en fresco y otros para conserva. Las ú │                   │              │                  │
+│                 │                                                             │              │             │                           │ nicas higueras con cuidados culturales esmerados, en muchas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ comarcas, son las brevales, por el interés económico de su p │                   │              │                  │
+│                 │                                                             │              │             │                           │ rimera cosecha, la de brevas.                                │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-39           │ Higuera Breva                                               │ Frutales     │             │ Frutales Talavera S.A     │ La higuera (Ficus carica L.) es un árbol típico de secano en │ 400               │ 9            │ 7                │
+│                 │                                                             │              │             │                           │  los países mediterráneos. Su rusticidad y su fácil multipli │                   │              │                  │
+│                 │                                                             │              │             │                           │ cación hacen de la higuera un frutal muy apropiado para el c │                   │              │                  │
+│                 │                                                             │              │             │                           │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │                   │              │                  │
+│                 │                                                             │              │             │                           │ e no requiere cuidado alguno una vez plantado y arraigado, l │                   │              │                  │
+│                 │                                                             │              │             │                           │ imitándose el hombre a recoger de él los frutos cuando madur │                   │              │                  │
+│                 │                                                             │              │             │                           │ an, unos para consumo en fresco y otros para conserva. Las ú │                   │              │                  │
+│                 │                                                             │              │             │                           │ nicas higueras con cuidados culturales esmerados, en muchas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ comarcas, son las brevales, por el interés económico de su p │                   │              │                  │
+│                 │                                                             │              │             │                           │ rimera cosecha, la de brevas.                                │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-44           │ Melocotonero Spring Crest                                   │ Frutales     │             │ Melocotones de Cieza S.A. │ Árbol caducifolio de porte bajo con corteza lisa, de color c │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ eniciento. Sus hojas son alargadas con el margen ligeramente │                   │              │                  │
+│                 │                                                             │              │             │                           │  aserrado, de color verde brillante, algo más claras por el  │                   │              │                  │
+│                 │                                                             │              │             │                           │ envés. El melocotonero está muy arraigado en la cultura asiá │                   │              │                  │
+│                 │                                                             │              │             │                           │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │                   │              │                  │
+│                 │                                                             │              │             │                           │ id japonés, nació del interior de un enorme melocotón que fl │                   │              │                  │
+│                 │                                                             │              │             │                           │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │                   │              │                  │
+│                 │                                                             │              │             │                           │ onfiere longevidad al ser humano, ya que formaba parte de la │                   │              │                  │
+│                 │                                                             │              │             │                           │  dieta de sus dioses inmortales.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-46           │ Melocotonero Federica                                       │ Frutales     │             │ Melocotones de Cieza S.A. │ Árbol caducifolio de porte bajo con corteza lisa, de color c │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ eniciento. Sus hojas son alargadas con el margen ligeramente │                   │              │                  │
+│                 │                                                             │              │             │                           │  aserrado, de color verde brillante, algo más claras por el  │                   │              │                  │
+│                 │                                                             │              │             │                           │ envés. El melocotonero está muy arraigado en la cultura asiá │                   │              │                  │
+│                 │                                                             │              │             │                           │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │                   │              │                  │
+│                 │                                                             │              │             │                           │ id japonés, nació del interior de un enorme melocotón que fl │                   │              │                  │
+│                 │                                                             │              │             │                           │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │                   │              │                  │
+│                 │                                                             │              │             │                           │ onfiere longevidad al ser humano, ya que formaba parte de la │                   │              │                  │
+│                 │                                                             │              │             │                           │  dieta de sus dioses inmortales.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-49           │ Parra Uva de Mesa                                           │ Frutales     │             │ Frutales Talavera S.A     │                                                              │ 400               │ 8            │ 6                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-5            │ Mandarino -Plantón joven                                    │ Frutales     │             │ Frutales Talavera S.A     │                                                              │ 15                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-50           │ Peral Castell                                               │ Frutales     │             │ Frutales Talavera S.A     │ Árbol piramidal, redondeado en su juventud, luego oval, que  │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ llega hasta 20 metros de altura y por término medio vive 65  │                   │              │                  │
+│                 │                                                             │              │             │                           │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cual se destacan con frecuencia placas lenticulares.Las rama │                   │              │                  │
+│                 │                                                             │              │             │                           │ s se insertan formando ángulo agudo con el tronco (45º), de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ corteza lisa, primero verde y luego gris-violácea, con numer │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas lenticelas.                                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-51           │ Peral Williams                                              │ Frutales     │             │ Frutales Talavera S.A     │ Árbol piramidal, redondeado en su juventud, luego oval, que  │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ llega hasta 20 metros de altura y por término medio vive 65  │                   │              │                  │
+│                 │                                                             │              │             │                           │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cual se destacan con frecuencia placas lenticulares.Las rama │                   │              │                  │
+│                 │                                                             │              │             │                           │ s se insertan formando ángulo agudo con el tronco (45º), de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ corteza lisa, primero verde y luego gris-violácea, con numer │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas lenticelas.                                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-52           │ Peral Conference                                            │ Frutales     │             │ Frutales Talavera S.A     │ Árbol piramidal, redondeado en su juventud, luego oval, que  │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ llega hasta 20 metros de altura y por término medio vive 65  │                   │              │                  │
+│                 │                                                             │              │             │                           │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cual se destacan con frecuencia placas lenticulares.Las rama │                   │              │                  │
+│                 │                                                             │              │             │                           │ s se insertan formando ángulo agudo con el tronco (45º), de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ corteza lisa, primero verde y luego gris-violácea, con numer │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas lenticelas.                                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-55           │ Olivo Cipresino                                             │ Frutales     │             │ Frutales Talavera S.A     │ Existen dos hipótesis sobre el origen del olivo, una que pos │ 400               │ 8            │ 6                │
+│                 │                                                             │              │             │                           │ tula que proviene de las costas de Siria, Líbano e Israel y  │                   │              │                  │
+│                 │                                                             │              │             │                           │ otra que considera que lo considera originario de Asia menor │                   │              │                  │
+│                 │                                                             │              │             │                           │ . La llegada a Europa probablemente tuvo lugar de mano de lo │                   │              │                  │
+│                 │                                                             │              │             │                           │ s Fenicios, en transito por Chipre, Creta, e Islas del Mar E │                   │              │                  │
+│                 │                                                             │              │             │                           │ geo, pasando a Grecia y más tarde a Italia. Los primeros ind │                   │              │                  │
+│                 │                                                             │              │             │                           │ icios de la presencia del olivo en las costas mediterráneas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ españolas coinciden con el dominio romano, aunque fueron pos │                   │              │                  │
+│                 │                                                             │              │             │                           │ teriormente los árabes los que impulsaron su cultivo en Anda │                   │              │                  │
+│                 │                                                             │              │             │                           │ lucía, convirtiendo a España en el primer país productor de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aceite de oliva a nivel mundial.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-59           │ Albaricoquero                                               │ Frutales     │ 10/12       │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 200               │ 22           │ 17               │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-61           │ Albaricoquero                                               │ Frutales     │ 14/16       │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 200               │ 49           │ 39               │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-62           │ Albaricoquero                                               │ Frutales     │ 16/18       │ Melocotones de Cieza S.A. │ árbol que puede pasar de los 6 m de altura, en la región med │ 200               │ 70           │ 56               │
+│                 │                                                             │              │             │                           │ iterránea con ramas formando una copa redondeada. La corteza │                   │              │                  │
+│                 │                                                             │              │             │                           │  del tronco es pardo-violácea, agrietada; las ramas son roji │                   │              │                  │
+│                 │                                                             │              │             │                           │ zas y extendidas cuando jóvenes y las ramas secundarias son  │                   │              │                  │
+│                 │                                                             │              │             │                           │ cortas, divergentes y escasas. Las yemas latentes son frecue │                   │              │                  │
+│                 │                                                             │              │             │                           │ ntes especialmente sobre las ramas viejas.                   │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-63           │ Cerezo                                                      │ Frutales     │ 8/10        │ Jerte Distribuciones S.L. │ Las principales especies de cerezo cultivadas en el mundo so │ 300               │ 11           │ 8                │
+│                 │                                                             │              │             │                           │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │                   │              │                  │
+│                 │                                                             │              │             │                           │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │                   │              │                  │
+│                 │                                                             │              │             │                           │  son naturales del sureste de Europa y oeste de Asia. El cer │                   │              │                  │
+│                 │                                                             │              │             │                           │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │                   │              │                  │
+│                 │                                                             │              │             │                           │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │                   │              │                  │
+│                 │                                                             │              │             │                           │ evado por los pájaros y las migraciones humanas. Fue uno de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ los frutales más apreciados por los griegos y con el Imperio │                   │              │                  │
+│                 │                                                             │              │             │                           │  Romano se extendió a regiones muy diversas. En la actualida │                   │              │                  │
+│                 │                                                             │              │             │                           │ d, el cerezo se encuentra difundido por numerosas regiones y │                   │              │                  │
+│                 │                                                             │              │             │                           │  países del mundo con clima templado                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-65           │ Cerezo                                                      │ Frutales     │ 12/14       │ Jerte Distribuciones S.L. │ Las principales especies de cerezo cultivadas en el mundo so │ 200               │ 32           │ 25               │
+│                 │                                                             │              │             │                           │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │                   │              │                  │
+│                 │                                                             │              │             │                           │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │                   │              │                  │
+│                 │                                                             │              │             │                           │  son naturales del sureste de Europa y oeste de Asia. El cer │                   │              │                  │
+│                 │                                                             │              │             │                           │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │                   │              │                  │
+│                 │                                                             │              │             │                           │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │                   │              │                  │
+│                 │                                                             │              │             │                           │ evado por los pájaros y las migraciones humanas. Fue uno de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ los frutales más apreciados por los griegos y con el Imperio │                   │              │                  │
+│                 │                                                             │              │             │                           │  Romano se extendió a regiones muy diversas. En la actualida │                   │              │                  │
+│                 │                                                             │              │             │                           │ d, el cerezo se encuentra difundido por numerosas regiones y │                   │              │                  │
+│                 │                                                             │              │             │                           │  países del mundo con clima templado                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-68           │ Cerezo                                                      │ Frutales     │ 18/20       │ Jerte Distribuciones S.L. │ Las principales especies de cerezo cultivadas en el mundo so │ 50                │ 80           │ 64               │
+│                 │                                                             │              │             │                           │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │                   │              │                  │
+│                 │                                                             │              │             │                           │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │                   │              │                  │
+│                 │                                                             │              │             │                           │  son naturales del sureste de Europa y oeste de Asia. El cer │                   │              │                  │
+│                 │                                                             │              │             │                           │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │                   │              │                  │
+│                 │                                                             │              │             │                           │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │                   │              │                  │
+│                 │                                                             │              │             │                           │ evado por los pájaros y las migraciones humanas. Fue uno de  │                   │              │                  │
+│                 │                                                             │              │             │                           │ los frutales más apreciados por los griegos y con el Imperio │                   │              │                  │
+│                 │                                                             │              │             │                           │  Romano se extendió a regiones muy diversas. En la actualida │                   │              │                  │
+│                 │                                                             │              │             │                           │ d, el cerezo se encuentra difundido por numerosas regiones y │                   │              │                  │
+│                 │                                                             │              │             │                           │  países del mundo con clima templado                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-70           │ Ciruelo                                                     │ Frutales     │ 8/10        │ Frutales Talavera S.A     │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │ 50                │ 11           │ 8                │
+│                 │                                                             │              │             │                           │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │                   │              │                  │
+│                 │                                                             │              │             │                           │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │                   │              │                  │
+│                 │                                                             │              │             │                           │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │                   │              │                  │
+│                 │                                                             │              │             │                           │ osas                                                         │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-73           │ Granado                                                     │ Frutales     │ 8/10        │ Frutales Talavera S.A     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │ 50                │ 13           │ 10               │
+│                 │                                                             │              │             │                           │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │                   │              │                  │
+│                 │                                                             │              │             │                           │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │                   │              │                  │
+│                 │                                                             │              │             │                           │  o menos cuadrangulares o angostas y de cuatro alas, posteri │                   │              │                  │
+│                 │                                                             │              │             │                           │ ormente se vuelven redondas con corteza de color café grisác │                   │              │                  │
+│                 │                                                             │              │             │                           │ eo, la mayoría de las ramas, pero especialmente las pequeñas │                   │              │                  │
+│                 │                                                             │              │             │                           │  ramitas axilares, son en forma de espina o terminan en una  │                   │              │                  │
+│                 │                                                             │              │             │                           │ espina aguda; la copa es extendida.                          │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-74           │ Granado                                                     │ Frutales     │ 10/12       │ Frutales Talavera S.A     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │ 50                │ 22           │ 17               │
+│                 │                                                             │              │             │                           │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │                   │              │                  │
+│                 │                                                             │              │             │                           │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │                   │              │                  │
+│                 │                                                             │              │             │                           │  o menos cuadrangulares o angostas y de cuatro alas, posteri │                   │              │                  │
+│                 │                                                             │              │             │                           │ ormente se vuelven redondas con corteza de color café grisác │                   │              │                  │
+│                 │                                                             │              │             │                           │ eo, la mayoría de las ramas, pero especialmente las pequeñas │                   │              │                  │
+│                 │                                                             │              │             │                           │  ramitas axilares, son en forma de espina o terminan en una  │                   │              │                  │
+│                 │                                                             │              │             │                           │ espina aguda; la copa es extendida.                          │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-76           │ Granado                                                     │ Frutales     │ 14/16       │ Frutales Talavera S.A     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │ 50                │ 49           │ 39               │
+│                 │                                                             │              │             │                           │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │                   │              │                  │
+│                 │                                                             │              │             │                           │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │                   │              │                  │
+│                 │                                                             │              │             │                           │  o menos cuadrangulares o angostas y de cuatro alas, posteri │                   │              │                  │
+│                 │                                                             │              │             │                           │ ormente se vuelven redondas con corteza de color café grisác │                   │              │                  │
+│                 │                                                             │              │             │                           │ eo, la mayoría de las ramas, pero especialmente las pequeñas │                   │              │                  │
+│                 │                                                             │              │             │                           │  ramitas axilares, son en forma de espina o terminan en una  │                   │              │                  │
+│                 │                                                             │              │             │                           │ espina aguda; la copa es extendida.                          │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-83           │ Higuera                                                     │ Frutales     │ 18/20       │ Frutales Talavera S.A     │ La higuera (Ficus carica L.) es un árbol típico de secano en │ 50                │ 80           │ 64               │
+│                 │                                                             │              │             │                           │  los países mediterráneos. Su rusticidad y su fácil multipli │                   │              │                  │
+│                 │                                                             │              │             │                           │ cación hacen de la higuera un frutal muy apropiado para el c │                   │              │                  │
+│                 │                                                             │              │             │                           │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │                   │              │                  │
+│                 │                                                             │              │             │                           │ e no requiere cuidado alguno una vez plantado y arraigado, l │                   │              │                  │
+│                 │                                                             │              │             │                           │ imitándose el hombre a recoger de él los frutos cuando madur │                   │              │                  │
+│                 │                                                             │              │             │                           │ an, unos para consumo en fresco y otros para conserva. Las ú │                   │              │                  │
+│                 │                                                             │              │             │                           │ nicas higueras con cuidados culturales esmerados, en muchas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ comarcas, son las brevales, por el interés económico de su p │                   │              │                  │
+│                 │                                                             │              │             │                           │ rimera cosecha, la de brevas.                                │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-88           │ Manzano                                                     │ Frutales     │ 12/14       │ Frutales Talavera S.A     │ alcanza como máximo 10 m. de altura y tiene una copa globosa │ 50                │ 32           │ 25               │
+│                 │                                                             │              │             │                           │ . Tronco derecho que normalmente alcanza de 2 a 2,5 m. de al │                   │              │                  │
+│                 │                                                             │              │             │                           │ tura, con corteza cubierta de lenticelas, lisa, adherida, de │                   │              │                  │
+│                 │                                                             │              │             │                           │  color ceniciento verdoso sobre los ramos y escamosa y gris  │                   │              │                  │
+│                 │                                                             │              │             │                           │ parda sobre las partes viejas del árbol. Tiene una vida de u │                   │              │                  │
+│                 │                                                             │              │             │                           │ nos 60-80 años. Las ramas se insertan en ángulo abierto sobr │                   │              │                  │
+│                 │                                                             │              │             │                           │ e el tallo, de color verde oscuro, a veces tendiendo a negru │                   │              │                  │
+│                 │                                                             │              │             │                           │ zco o violáceo. Los brotes jóvenes terminan con frecuencia e │                   │              │                  │
+│                 │                                                             │              │             │                           │ n una espina                                                 │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-92           │ Melocotonero                                                │ Frutales     │ 8/10        │ Melocotones de Cieza S.A. │ Árbol caducifolio de porte bajo con corteza lisa, de color c │ 50                │ 11           │ 8                │
+│                 │                                                             │              │             │                           │ eniciento. Sus hojas son alargadas con el margen ligeramente │                   │              │                  │
+│                 │                                                             │              │             │                           │  aserrado, de color verde brillante, algo más claras por el  │                   │              │                  │
+│                 │                                                             │              │             │                           │ envés. El melocotonero está muy arraigado en la cultura asiá │                   │              │                  │
+│                 │                                                             │              │             │                           │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │                   │              │                  │
+│                 │                                                             │              │             │                           │ id japonés, nació del interior de un enorme melocotón que fl │                   │              │                  │
+│                 │                                                             │              │             │                           │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │                   │              │                  │
+│                 │                                                             │              │             │                           │ onfiere longevidad al ser humano, ya que formaba parte de la │                   │              │                  │
+│                 │                                                             │              │             │                           │  dieta de sus dioses inmortales.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-93           │ Melocotonero                                                │ Frutales     │ 10/12       │ Melocotones de Cieza S.A. │ Árbol caducifolio de porte bajo con corteza lisa, de color c │ 50                │ 22           │ 17               │
+│                 │                                                             │              │             │                           │ eniciento. Sus hojas son alargadas con el margen ligeramente │                   │              │                  │
+│                 │                                                             │              │             │                           │  aserrado, de color verde brillante, algo más claras por el  │                   │              │                  │
+│                 │                                                             │              │             │                           │ envés. El melocotonero está muy arraigado en la cultura asiá │                   │              │                  │
+│                 │                                                             │              │             │                           │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │                   │              │                  │
+│                 │                                                             │              │             │                           │ id japonés, nació del interior de un enorme melocotón que fl │                   │              │                  │
+│                 │                                                             │              │             │                           │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │                   │              │                  │
+│                 │                                                             │              │             │                           │ onfiere longevidad al ser humano, ya que formaba parte de la │                   │              │                  │
+│                 │                                                             │              │             │                           │  dieta de sus dioses inmortales.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-95           │ Melocotonero                                                │ Frutales     │ 14/16       │ Melocotones de Cieza S.A. │ Árbol caducifolio de porte bajo con corteza lisa, de color c │ 50                │ 49           │ 39               │
+│                 │                                                             │              │             │                           │ eniciento. Sus hojas son alargadas con el margen ligeramente │                   │              │                  │
+│                 │                                                             │              │             │                           │  aserrado, de color verde brillante, algo más claras por el  │                   │              │                  │
+│                 │                                                             │              │             │                           │ envés. El melocotonero está muy arraigado en la cultura asiá │                   │              │                  │
+│                 │                                                             │              │             │                           │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │                   │              │                  │
+│                 │                                                             │              │             │                           │ id japonés, nació del interior de un enorme melocotón que fl │                   │              │                  │
+│                 │                                                             │              │             │                           │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │                   │              │                  │
+│                 │                                                             │              │             │                           │ onfiere longevidad al ser humano, ya que formaba parte de la │                   │              │                  │
+│                 │                                                             │              │             │                           │  dieta de sus dioses inmortales.                             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-96           │ Membrillero                                                 │ Frutales     │ 8/10        │ Frutales Talavera S.A     │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │ 50                │ 11           │ 8                │
+│                 │                                                             │              │             │                           │ so y la corteza lisa, grisácea, que se desprende en escamas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │                   │              │                  │
+│                 │                                                             │              │             │                           │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-97           │ Membrillero                                                 │ Frutales     │ 10/12       │ Frutales Talavera S.A     │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │ 50                │ 22           │ 17               │
+│                 │                                                             │              │             │                           │ so y la corteza lisa, grisácea, que se desprende en escamas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │                   │              │                  │
+│                 │                                                             │              │             │                           │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-98           │ Membrillero                                                 │ Frutales     │ 12/14       │ Frutales Talavera S.A     │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │ 50                │ 32           │ 25               │
+│                 │                                                             │              │             │                           │ so y la corteza lisa, grisácea, que se desprende en escamas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │                   │              │                  │
+│                 │                                                             │              │             │                           │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ FR-99           │ Membrillero                                                 │ Frutales     │ 14/16       │ Frutales Talavera S.A     │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │ 50                │ 49           │ 39               │
+│                 │                                                             │              │             │                           │ so y la corteza lisa, grisácea, que se desprende en escamas  │                   │              │                  │
+│                 │                                                             │              │             │                           │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │                   │              │                  │
+│                 │                                                             │              │             │                           │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-001          │ Arbustos Mix Maceta                                         │ Ornamentales │ 40-60       │ Valencia Garden Service   │                                                              │ 25                │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-100          │ Mimosa Injerto CLASICA Dealbata                             │ Ornamentales │ 100-110     │ Viveros EL OASIS          │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │ 100               │ 12           │ 9                │
+│                 │                                                             │              │             │                           │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │                   │              │                  │
+│                 │                                                             │              │             │                           │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │                   │              │                  │
+│                 │                                                             │              │             │                           │ a). Arbol de follaje persistente muy usado en parques por su │                   │              │                  │
+│                 │                                                             │              │             │                           │  atractiva floración amarilla hacia fines del invierno. Altu │                   │              │                  │
+│                 │                                                             │              │             │                           │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │                   │              │                  │
+│                 │                                                             │              │             │                           │ je perenne de tonos plateados, muy ornamental. Sus hojas son │                   │              │                  │
+│                 │                                                             │              │             │                           │  de textura fina, de color verde y sus flores amarillas que  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │                   │              │                  │
+│                 │                                                             │              │             │                           │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │                   │              │                  │
+│                 │                                                             │              │             │                           │ mente curvada, con los bordes algo constreñidos entre las se │                   │              │                  │
+│                 │                                                             │              │             │                           │ millas, que se disponen en el fruto longitudinalmente...     │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-103          │ Mimosa Semilla Bayleyana                                    │ Ornamentales │ 200-225     │ Viveros EL OASIS          │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │ 100               │ 10           │ 8                │
+│                 │                                                             │              │             │                           │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │                   │              │                  │
+│                 │                                                             │              │             │                           │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │                   │              │                  │
+│                 │                                                             │              │             │                           │ a). Arbol de follaje persistente muy usado en parques por su │                   │              │                  │
+│                 │                                                             │              │             │                           │  atractiva floración amarilla hacia fines del invierno. Altu │                   │              │                  │
+│                 │                                                             │              │             │                           │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │                   │              │                  │
+│                 │                                                             │              │             │                           │ je perenne de tonos plateados, muy ornamental. Sus hojas son │                   │              │                  │
+│                 │                                                             │              │             │                           │  de textura fina, de color verde y sus flores amarillas que  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │                   │              │                  │
+│                 │                                                             │              │             │                           │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │                   │              │                  │
+│                 │                                                             │              │             │                           │ mente curvada, con los bordes algo constreñidos entre las se │                   │              │                  │
+│                 │                                                             │              │             │                           │ millas, que se disponen en el fruto longitudinalmente...     │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-105          │ Mimosa Semilla Espectabilis                                 │ Ornamentales │ 160-170     │ Viveros EL OASIS          │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │ 100               │ 6            │ 4                │
+│                 │                                                             │              │             │                           │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │                   │              │                  │
+│                 │                                                             │              │             │                           │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │                   │              │                  │
+│                 │                                                             │              │             │                           │ a). Arbol de follaje persistente muy usado en parques por su │                   │              │                  │
+│                 │                                                             │              │             │                           │  atractiva floración amarilla hacia fines del invierno. Altu │                   │              │                  │
+│                 │                                                             │              │             │                           │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │                   │              │                  │
+│                 │                                                             │              │             │                           │ je perenne de tonos plateados, muy ornamental. Sus hojas son │                   │              │                  │
+│                 │                                                             │              │             │                           │  de textura fina, de color verde y sus flores amarillas que  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │                   │              │                  │
+│                 │                                                             │              │             │                           │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │                   │              │                  │
+│                 │                                                             │              │             │                           │ mente curvada, con los bordes algo constreñidos entre las se │                   │              │                  │
+│                 │                                                             │              │             │                           │ millas, que se disponen en el fruto longitudinalmente...     │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-106          │ Mimosa Semilla Longifolia                                   │ Ornamentales │ 200-225     │ Viveros EL OASIS          │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │ 100               │ 10           │ 8                │
+│                 │                                                             │              │             │                           │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │                   │              │                  │
+│                 │                                                             │              │             │                           │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │                   │              │                  │
+│                 │                                                             │              │             │                           │ a). Arbol de follaje persistente muy usado en parques por su │                   │              │                  │
+│                 │                                                             │              │             │                           │  atractiva floración amarilla hacia fines del invierno. Altu │                   │              │                  │
+│                 │                                                             │              │             │                           │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │                   │              │                  │
+│                 │                                                             │              │             │                           │ je perenne de tonos plateados, muy ornamental. Sus hojas son │                   │              │                  │
+│                 │                                                             │              │             │                           │  de textura fina, de color verde y sus flores amarillas que  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │                   │              │                  │
+│                 │                                                             │              │             │                           │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │                   │              │                  │
+│                 │                                                             │              │             │                           │ mente curvada, con los bordes algo constreñidos entre las se │                   │              │                  │
+│                 │                                                             │              │             │                           │ millas, que se disponen en el fruto longitudinalmente...     │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-107          │ Mimosa Semilla Floribunda 4 estaciones                      │ Ornamentales │ 120-140     │ Viveros EL OASIS          │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │ 100               │ 6            │ 4                │
+│                 │                                                             │              │             │                           │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │                   │              │                  │
+│                 │                                                             │              │             │                           │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │                   │              │                  │
+│                 │                                                             │              │             │                           │ a). Arbol de follaje persistente muy usado en parques por su │                   │              │                  │
+│                 │                                                             │              │             │                           │  atractiva floración amarilla hacia fines del invierno. Altu │                   │              │                  │
+│                 │                                                             │              │             │                           │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │                   │              │                  │
+│                 │                                                             │              │             │                           │ je perenne de tonos plateados, muy ornamental. Sus hojas son │                   │              │                  │
+│                 │                                                             │              │             │                           │  de textura fina, de color verde y sus flores amarillas que  │                   │              │                  │
+│                 │                                                             │              │             │                           │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │                   │              │                  │
+│                 │                                                             │              │             │                           │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │                   │              │                  │
+│                 │                                                             │              │             │                           │ mente curvada, con los bordes algo constreñidos entre las se │                   │              │                  │
+│                 │                                                             │              │             │                           │ millas, que se disponen en el fruto longitudinalmente...     │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-108          │ Abelia Floribunda                                           │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 100               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-109          │ Callistemom (Mix)                                           │ Ornamentales │ 35-45       │ Viveros EL OASIS          │ Limpitatubos. arbolito de 6-7 m de altura. Ramas flexibles y │ 100               │ 5            │ 4                │
+│                 │                                                             │              │             │                           │  colgantes (de ahí lo de \"llorón\")..                       │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-110          │ Callistemom (Mix)                                           │ Ornamentales │ 40-60       │ Viveros EL OASIS          │ Limpitatubos. arbolito de 6-7 m de altura. Ramas flexibles y │ 100               │ 2            │ 1                │
+│                 │                                                             │              │             │                           │  colgantes (de ahí lo de \"llorón\")..                       │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-111          │ Corylus Avellana \"Contorta\"                               │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 100               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-112          │ Escallonia (Mix)                                            │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-113          │ Evonimus Emerald Gayeti                                     │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-114          │ Evonimus Pulchellus                                         │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-117          │ Hibiscus Syriacus  \"Helene\" -Blanco-C.rojo                │ Ornamentales │ 35-45       │ Viveros EL OASIS          │ Por su capacidad de soportar podas, pueden ser fácilmente mo │ 120               │ 7            │ 5                │
+│                 │                                                             │              │             │                           │ ldeadas como bonsái en el transcurso de pocos años. Flores d │                   │              │                  │
+│                 │                                                             │              │             │                           │ e muchos colores según la variedad, desde el blanco puro al  │                   │              │                  │
+│                 │                                                             │              │             │                           │ rojo intenso, del amarillo al anaranjado. La flor apenas dur │                   │              │                  │
+│                 │                                                             │              │             │                           │ a 1 día, pero continuamente aparecen nuevas y la floración s │                   │              │                  │
+│                 │                                                             │              │             │                           │ e prolonga durante todo el periodo de crecimiento vegetativo │                   │              │                  │
+│                 │                                                             │              │             │                           │ .                                                            │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-118          │ Hibiscus Syriacus \"Pink Giant\" Rosa                       │ Ornamentales │ 35-45       │ Viveros EL OASIS          │ Por su capacidad de soportar podas, pueden ser fácilmente mo │ 120               │ 7            │ 5                │
+│                 │                                                             │              │             │                           │ ldeadas como bonsái en el transcurso de pocos años. Flores d │                   │              │                  │
+│                 │                                                             │              │             │                           │ e muchos colores según la variedad, desde el blanco puro al  │                   │              │                  │
+│                 │                                                             │              │             │                           │ rojo intenso, del amarillo al anaranjado. La flor apenas dur │                   │              │                  │
+│                 │                                                             │              │             │                           │ a 1 día, pero continuamente aparecen nuevas y la floración s │                   │              │                  │
+│                 │                                                             │              │             │                           │ e prolonga durante todo el periodo de crecimiento vegetativo │                   │              │                  │
+│                 │                                                             │              │             │                           │ .                                                            │                   │              │                  │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-121          │ Lonicera Nitida \"Maigrum\"                                 │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-124          │ Prunus pisardii                                             │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-126          │ Weigelia \"Bristol Ruby\"                                   │ Ornamentales │ 35-45       │ Viveros EL OASIS          │                                                              │ 120               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-131          │ Leptospermum formado PIRAMIDE                               │ Ornamentales │ 80-100      │ Viveros EL OASIS          │                                                              │ 50                │ 18           │ 14               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-132          │ Leptospermum COPA                                           │ Ornamentales │ 110/120     │ Viveros EL OASIS          │                                                              │ 50                │ 18           │ 14               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-133          │ Nerium oleander-CALIDAD \"GARDEN\"                          │ Ornamentales │ 40-45       │ Viveros EL OASIS          │                                                              │ 50                │ 2            │ 1                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-134          │ Nerium Oleander Arbusto GRANDE                              │ Ornamentales │ 160-200     │ Viveros EL OASIS          │                                                              │ 100               │ 38           │ 30               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-135          │ Nerium oleander COPA  Calibre 6/8                           │ Ornamentales │ 50-60       │ Viveros EL OASIS          │                                                              │ 100               │ 5            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-137          │ ROSAL TREPADOR                                              │ Ornamentales │             │ Viveros EL OASIS          │                                                              │ 100               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-138          │ Camelia Blanco, Chrysler Rojo, Soraya Naranja,              │ Ornamentales │             │ Viveros EL OASIS          │                                                              │ 100               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-142          │ Solanum Jazminoide                                          │ Ornamentales │ 150-160     │ Viveros EL OASIS          │                                                              │ 100               │ 2            │ 1                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-143          │ Wisteria Sinensis  azul, rosa, blanca                       │ Ornamentales │             │ Viveros EL OASIS          │                                                              │ 100               │ 9            │ 7                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-144          │ Wisteria Sinensis INJERTADAS DECÃ“                          │ Ornamentales │ 140-150     │ Viveros EL OASIS          │                                                              │ 100               │ 12           │ 9                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-145          │ Bougamvillea Sanderiana Tutor                               │ Ornamentales │ 80-100      │ Viveros EL OASIS          │                                                              │ 100               │ 2            │ 1                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-148          │ Bougamvillea Sanderiana Espaldera                           │ Ornamentales │ 45-50       │ Viveros EL OASIS          │                                                              │ 100               │ 7            │ 5                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-149          │ Bougamvillea Sanderiana Espaldera                           │ Ornamentales │ 140-150     │ Viveros EL OASIS          │                                                              │ 100               │ 17           │ 13               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-151          │ Bougamvillea Sanderiana, 3 tut. piramide                    │ Ornamentales │             │ Viveros EL OASIS          │                                                              │ 100               │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-153          │ Expositor Árboles clima mediterráneo                        │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 100               │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-154          │ Expositor Árboles borde del mar                             │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 100               │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-158          │ Brachychiton Acerifolius                                    │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 100               │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-161          │ Cassia Corimbosa                                            │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 100               │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-162          │ Cassia Corimbosa                                            │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 100               │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-163          │ Chitalpa Summer Bells                                       │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-164          │ Erytrina Kafra                                              │ Ornamentales │ 170-180     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-166          │ Eucalyptus Citriodora                                       │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-167          │ Eucalyptus Ficifolia                                        │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-169          │ Hibiscus Syriacus  Var. Injertadas 1 Tallo                  │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 12           │ 9                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-170          │ Lagunaria Patersonii                                        │ Ornamentales │ 140-150     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-171          │ Lagunaria Patersonii                                        │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-173          │ Morus Alba                                                  │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-175          │ Platanus Acerifolia                                         │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-178          │ Salix Babylonica  Pendula                                   │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-180          │ Tamarix  Ramosissima Pink Cascade                           │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-182          │ Tecoma Stands                                               │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-183          │ Tecoma Stands                                               │ Ornamentales │ 200-225     │ Viveros EL OASIS          │                                                              │ 80                │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-184          │ Tipuana Tipu                                                │ Ornamentales │ 170-200     │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-185          │ Pleioblastus distichus-Bambú enano                          │ Ornamentales │ 15-20       │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-187          │ Sasa palmata                                                │ Ornamentales │ 40-45       │ Viveros EL OASIS          │                                                              │ 80                │ 10           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-189          │ Phylostachys aurea                                          │ Ornamentales │ 180-200     │ Viveros EL OASIS          │                                                              │ 80                │ 22           │ 17               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-190          │ Phylostachys aurea                                          │ Ornamentales │ 250-300     │ Viveros EL OASIS          │                                                              │ 80                │ 32           │ 25               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-191          │ Phylostachys Bambusa Spectabilis                            │ Ornamentales │ 180-200     │ Viveros EL OASIS          │                                                              │ 80                │ 24           │ 19               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-192          │ Phylostachys biseti                                         │ Ornamentales │ 160-170     │ Viveros EL OASIS          │                                                              │ 80                │ 22           │ 17               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-194          │ Pseudosasa japonica (Metake)                                │ Ornamentales │ 225-250     │ Viveros EL OASIS          │                                                              │ 80                │ 20           │ 16               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-195          │ Pseudosasa japonica (Metake)                                │ Ornamentales │ 30-40       │ Viveros EL OASIS          │                                                              │ 80                │ 6            │ 4                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-197          │ Cedrus Deodara \"Feeling Blue\" Novedad                     │ Ornamentales │ rastrero    │ Viveros EL OASIS          │                                                              │ 80                │ 12           │ 9                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-198          │ Juniperus chinensis \"Blue Alps\"                           │ Ornamentales │ 20-30       │ Viveros EL OASIS          │                                                              │ 80                │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-199          │ Juniperus Chinensis Stricta                                 │ Ornamentales │ 20-30       │ Viveros EL OASIS          │                                                              │ 80                │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-201          │ Juniperus squamata \"Blue Star\"                            │ Ornamentales │ 20-30       │ Viveros EL OASIS          │                                                              │ 80                │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-202          │ Juniperus x media Phitzeriana verde                         │ Ornamentales │ 20-30       │ Viveros EL OASIS          │                                                              │ 80                │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-212          │ Bismarckia Nobilis                                          │ Ornamentales │ 200 - 220   │ Viveros EL OASIS          │                                                              │ 4                 │ 217          │ 173              │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-215          │ Brahea Armata                                               │ Ornamentales │ 120 - 140   │ Viveros EL OASIS          │                                                              │ 100               │ 112          │ 89               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-216          │ Brahea Edulis                                               │ Ornamentales │ 80 - 100    │ Viveros EL OASIS          │                                                              │ 100               │ 19           │ 15               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-219          │ Butia Capitata                                              │ Ornamentales │ 90 - 110    │ Viveros EL OASIS          │                                                              │ 100               │ 29           │ 23               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-220          │ Butia Capitata                                              │ Ornamentales │ 90 - 120    │ Viveros EL OASIS          │                                                              │ 100               │ 36           │ 28               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-221          │ Butia Capitata                                              │ Ornamentales │ 85 - 105    │ Viveros EL OASIS          │                                                              │ 100               │ 59           │ 47               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-223          │ Chamaerops Humilis                                          │ Ornamentales │ 40 - 45     │ Viveros EL OASIS          │                                                              │ 100               │ 4            │ 3                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-224          │ Chamaerops Humilis                                          │ Ornamentales │ 50 - 60     │ Viveros EL OASIS          │                                                              │ 100               │ 7            │ 5                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-228          │ Chamaerops Humilis \"Cerifera\"                             │ Ornamentales │ 70 - 80     │ Viveros EL OASIS          │                                                              │ 100               │ 32           │ 25               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-229          │ Chrysalidocarpus Lutescens -ARECA                           │ Ornamentales │ 130 - 150   │ Viveros EL OASIS          │                                                              │ 100               │ 22           │ 17               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-230          │ Cordyline Australis -DRACAENA                               │ Ornamentales │ 190 - 210   │ Viveros EL OASIS          │                                                              │ 100               │ 38           │ 30               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-231          │ Cycas Revoluta                                              │ Ornamentales │ 55 - 65     │ Viveros EL OASIS          │                                                              │ 100               │ 15           │ 12               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-232          │ Cycas Revoluta                                              │ Ornamentales │ 80 - 90     │ Viveros EL OASIS          │                                                              │ 100               │ 34           │ 27               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-233          │ Dracaena Drago                                              │ Ornamentales │ 60 - 70     │ Viveros EL OASIS          │                                                              │ 1                 │ 13           │ 10               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-235          │ Dracaena Drago                                              │ Ornamentales │ 150 - 175   │ Viveros EL OASIS          │                                                              │ 2                 │ 92           │ 73               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-238          │ Livistonia Decipiens                                        │ Ornamentales │ 90 - 110    │ Viveros EL OASIS          │                                                              │ 50                │ 19           │ 15               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-239          │ Livistonia Decipiens                                        │ Ornamentales │ 180 - 200   │ Viveros EL OASIS          │                                                              │ 50                │ 49           │ 39               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-242          │ Rhaphis Excelsa                                             │ Ornamentales │ 80 - 100    │ Viveros EL OASIS          │                                                              │ 50                │ 21           │ 16               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-244          │ Sabal Minor                                                 │ Ornamentales │ 60 - 75     │ Viveros EL OASIS          │                                                              │ 50                │ 11           │ 8                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-245          │ Sabal Minor                                                 │ Ornamentales │ 120 - 140   │ Viveros EL OASIS          │                                                              │ 50                │ 34           │ 27               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-246          │ Trachycarpus Fortunei                                       │ Ornamentales │ 90 - 105    │ Viveros EL OASIS          │                                                              │ 50                │ 18           │ 14               │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-248          │ Washingtonia Robusta                                        │ Ornamentales │ 60 - 70     │ Viveros EL OASIS          │                                                              │ 15                │ 3            │ 2                │
+├─────────────────┼─────────────────────────────────────────────────────────────┼──────────────┼─────────────┼───────────────────────────┼──────────────────────────────────────────────────────────────┼───────────────────┼──────────────┼──────────────────┤
+│ OR-251          │ Zamia Furfuracaea                                           │ Ornamentales │ 90 - 110    │ Viveros EL OASIS          │                                                              │ 15                │ 168          │ 134              │
+└─────────────────┴─────────────────────────────────────────────────────────────┴──────────────┴─────────────┴───────────────────────────┴──────────────────────────────────────────────────────────────┴───────────────────┴──────────────┴──────────────────┘
+**/
+-- Devuelve un listado de los productos que nunca han aparecido en un pedido. El resultado debe mostrar el nombre, la descripción y la imagen del producto.
+select pd.nombre, pd.descripcion, g.imagen from detalle_pedido as dp
+RIGHT JOIN producto as pd ON dp.codigo_producto=pd.codigo_producto
+JOIN gama_producto as g ON pd.gama=g.gama
+where dp.codigo_producto is null;
+/**
+┌─────────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────┬────────┐
+│                           nombre                            │                         descripcion                          │ imagen │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Olea-Olivos                                                 │ Existen dos hipótesis sobre el origen del olivo, una que pos │        │
+│                                                             │ tula que proviene de las costas de Siria, Líbano e Israel y  │        │
+│                                                             │ otra que considera que lo considera originario de Asia menor │        │
+│                                                             │ . La llegada a Europa probablemente tuvo lugar de mano de lo │        │
+│                                                             │ s Fenicios, en transito por Chipre, Creta, e Islas del Mar E │        │
+│                                                             │ geo, pasando a Grecia y más tarde a Italia. Los primeros ind │        │
+│                                                             │ icios de la presencia del olivo en las costas mediterráneas  │        │
+│                                                             │ españolas coinciden con el dominio romano, aunque fueron pos │        │
+│                                                             │ teriormente los árabes los que impulsaron su cultivo en Anda │        │
+│                                                             │ lucía, convirtiendo a España en el primer país productor de  │        │
+│                                                             │ aceite de oliva a nivel mundial.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Calamondin Mini                                             │ Se trata de un pequeño arbolito de copa densa, con tendencia │        │
+│                                                             │  a la verticalidad, inerme o con cortas espinas. Sus hojas s │        │
+│                                                             │ on pequeñas, elípticas de 5-10 cm de longitud, con los pecío │        │
+│                                                             │ los estrechamente alados.Posee 1 o 2 flores en situación axi │        │
+│                                                             │ lar, al final de las ramillas.Sus frutos son muy pequeños (3 │        │
+│                                                             │ -3,5 cm de diámetro), con pocas semillas, esféricos u ovales │        │
+│                                                             │ , con la zona apical aplanada; corteza de color naranja-roji │        │
+│                                                             │ zo, muy fina y fácilmente separable de la pulpa, que es dulc │        │
+│                                                             │ e, ácida y comestible..                                      │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Camelia Blanco, Chrysler Rojo, Soraya Naranja,              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Landora Amarillo, Rose Gaujard bicolor blanco-rojo          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Kordes Perfect bicolor rojo-amarillo, Roundelay rojo fuerte │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero Corbato                                       │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero Moniqui                                       │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero Kurrot                                        │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cerezo Burlat                                               │ Las principales especies de cerezo cultivadas en el mundo so │        │
+│                                                             │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │        │
+│                                                             │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │        │
+│                                                             │  son naturales del sureste de Europa y oeste de Asia. El cer │        │
+│                                                             │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │        │
+│                                                             │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │        │
+│                                                             │ evado por los pájaros y las migraciones humanas. Fue uno de  │        │
+│                                                             │ los frutales más apreciados por los griegos y con el Imperio │        │
+│                                                             │  Romano se extendió a regiones muy diversas. En la actualida │        │
+│                                                             │ d, el cerezo se encuentra difundido por numerosas regiones y │        │
+│                                                             │  países del mundo con clima templado                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cerezo Picota                                               │ Las principales especies de cerezo cultivadas en el mundo so │        │
+│                                                             │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │        │
+│                                                             │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │        │
+│                                                             │  son naturales del sureste de Europa y oeste de Asia. El cer │        │
+│                                                             │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │        │
+│                                                             │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │        │
+│                                                             │ evado por los pájaros y las migraciones humanas. Fue uno de  │        │
+│                                                             │ los frutales más apreciados por los griegos y con el Imperio │        │
+│                                                             │  Romano se extendió a regiones muy diversas. En la actualida │        │
+│                                                             │ d, el cerezo se encuentra difundido por numerosas regiones y │        │
+│                                                             │  países del mundo con clima templado                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Ciruelo R. Claudia Verde                                    │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │        │
+│                                                             │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │        │
+│                                                             │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │        │
+│                                                             │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │        │
+│                                                             │ osas                                                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Ciruelo Golden Japan                                        │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │        │
+│                                                             │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │        │
+│                                                             │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │        │
+│                                                             │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │        │
+│                                                             │ osas                                                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Ciruelo Claudia Negra                                       │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │        │
+│                                                             │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │        │
+│                                                             │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │        │
+│                                                             │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │        │
+│                                                             │ osas                                                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Higuera Verdal                                              │ La higuera (Ficus carica L.) es un árbol típico de secano en │        │
+│                                                             │  los países mediterráneos. Su rusticidad y su fácil multipli │        │
+│                                                             │ cación hacen de la higuera un frutal muy apropiado para el c │        │
+│                                                             │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │        │
+│                                                             │ e no requiere cuidado alguno una vez plantado y arraigado, l │        │
+│                                                             │ imitándose el hombre a recoger de él los frutos cuando madur │        │
+│                                                             │ an, unos para consumo en fresco y otros para conserva. Las ú │        │
+│                                                             │ nicas higueras con cuidados culturales esmerados, en muchas  │        │
+│                                                             │ comarcas, son las brevales, por el interés económico de su p │        │
+│                                                             │ rimera cosecha, la de brevas.                                │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Higuera Breva                                               │ La higuera (Ficus carica L.) es un árbol típico de secano en │        │
+│                                                             │  los países mediterráneos. Su rusticidad y su fácil multipli │        │
+│                                                             │ cación hacen de la higuera un frutal muy apropiado para el c │        │
+│                                                             │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │        │
+│                                                             │ e no requiere cuidado alguno una vez plantado y arraigado, l │        │
+│                                                             │ imitándose el hombre a recoger de él los frutos cuando madur │        │
+│                                                             │ an, unos para consumo en fresco y otros para conserva. Las ú │        │
+│                                                             │ nicas higueras con cuidados culturales esmerados, en muchas  │        │
+│                                                             │ comarcas, son las brevales, por el interés económico de su p │        │
+│                                                             │ rimera cosecha, la de brevas.                                │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Melocotonero Spring Crest                                   │ Árbol caducifolio de porte bajo con corteza lisa, de color c │        │
+│                                                             │ eniciento. Sus hojas son alargadas con el margen ligeramente │        │
+│                                                             │  aserrado, de color verde brillante, algo más claras por el  │        │
+│                                                             │ envés. El melocotonero está muy arraigado en la cultura asiá │        │
+│                                                             │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │        │
+│                                                             │ id japonés, nació del interior de un enorme melocotón que fl │        │
+│                                                             │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │        │
+│                                                             │ onfiere longevidad al ser humano, ya que formaba parte de la │        │
+│                                                             │  dieta de sus dioses inmortales.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Melocotonero Federica                                       │ Árbol caducifolio de porte bajo con corteza lisa, de color c │        │
+│                                                             │ eniciento. Sus hojas son alargadas con el margen ligeramente │        │
+│                                                             │  aserrado, de color verde brillante, algo más claras por el  │        │
+│                                                             │ envés. El melocotonero está muy arraigado en la cultura asiá │        │
+│                                                             │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │        │
+│                                                             │ id japonés, nació del interior de un enorme melocotón que fl │        │
+│                                                             │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │        │
+│                                                             │ onfiere longevidad al ser humano, ya que formaba parte de la │        │
+│                                                             │  dieta de sus dioses inmortales.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Parra Uva de Mesa                                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mandarino -Plantón joven                                    │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Peral Castell                                               │ Árbol piramidal, redondeado en su juventud, luego oval, que  │        │
+│                                                             │ llega hasta 20 metros de altura y por término medio vive 65  │        │
+│                                                             │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │        │
+│                                                             │ cual se destacan con frecuencia placas lenticulares.Las rama │        │
+│                                                             │ s se insertan formando ángulo agudo con el tronco (45º), de  │        │
+│                                                             │ corteza lisa, primero verde y luego gris-violácea, con numer │        │
+│                                                             │ osas lenticelas.                                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Peral Williams                                              │ Árbol piramidal, redondeado en su juventud, luego oval, que  │        │
+│                                                             │ llega hasta 20 metros de altura y por término medio vive 65  │        │
+│                                                             │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │        │
+│                                                             │ cual se destacan con frecuencia placas lenticulares.Las rama │        │
+│                                                             │ s se insertan formando ángulo agudo con el tronco (45º), de  │        │
+│                                                             │ corteza lisa, primero verde y luego gris-violácea, con numer │        │
+│                                                             │ osas lenticelas.                                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Peral Conference                                            │ Árbol piramidal, redondeado en su juventud, luego oval, que  │        │
+│                                                             │ llega hasta 20 metros de altura y por término medio vive 65  │        │
+│                                                             │ años.Tronco alto, grueso, de corteza agrietada, gris, de la  │        │
+│                                                             │ cual se destacan con frecuencia placas lenticulares.Las rama │        │
+│                                                             │ s se insertan formando ángulo agudo con el tronco (45º), de  │        │
+│                                                             │ corteza lisa, primero verde y luego gris-violácea, con numer │        │
+│                                                             │ osas lenticelas.                                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Olivo Cipresino                                             │ Existen dos hipótesis sobre el origen del olivo, una que pos │        │
+│                                                             │ tula que proviene de las costas de Siria, Líbano e Israel y  │        │
+│                                                             │ otra que considera que lo considera originario de Asia menor │        │
+│                                                             │ . La llegada a Europa probablemente tuvo lugar de mano de lo │        │
+│                                                             │ s Fenicios, en transito por Chipre, Creta, e Islas del Mar E │        │
+│                                                             │ geo, pasando a Grecia y más tarde a Italia. Los primeros ind │        │
+│                                                             │ icios de la presencia del olivo en las costas mediterráneas  │        │
+│                                                             │ españolas coinciden con el dominio romano, aunque fueron pos │        │
+│                                                             │ teriormente los árabes los que impulsaron su cultivo en Anda │        │
+│                                                             │ lucía, convirtiendo a España en el primer país productor de  │        │
+│                                                             │ aceite de oliva a nivel mundial.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero                                               │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero                                               │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Albaricoquero                                               │ árbol que puede pasar de los 6 m de altura, en la región med │        │
+│                                                             │ iterránea con ramas formando una copa redondeada. La corteza │        │
+│                                                             │  del tronco es pardo-violácea, agrietada; las ramas son roji │        │
+│                                                             │ zas y extendidas cuando jóvenes y las ramas secundarias son  │        │
+│                                                             │ cortas, divergentes y escasas. Las yemas latentes son frecue │        │
+│                                                             │ ntes especialmente sobre las ramas viejas.                   │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cerezo                                                      │ Las principales especies de cerezo cultivadas en el mundo so │        │
+│                                                             │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │        │
+│                                                             │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │        │
+│                                                             │  son naturales del sureste de Europa y oeste de Asia. El cer │        │
+│                                                             │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │        │
+│                                                             │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │        │
+│                                                             │ evado por los pájaros y las migraciones humanas. Fue uno de  │        │
+│                                                             │ los frutales más apreciados por los griegos y con el Imperio │        │
+│                                                             │  Romano se extendió a regiones muy diversas. En la actualida │        │
+│                                                             │ d, el cerezo se encuentra difundido por numerosas regiones y │        │
+│                                                             │  países del mundo con clima templado                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cerezo                                                      │ Las principales especies de cerezo cultivadas en el mundo so │        │
+│                                                             │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │        │
+│                                                             │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │        │
+│                                                             │  son naturales del sureste de Europa y oeste de Asia. El cer │        │
+│                                                             │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │        │
+│                                                             │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │        │
+│                                                             │ evado por los pájaros y las migraciones humanas. Fue uno de  │        │
+│                                                             │ los frutales más apreciados por los griegos y con el Imperio │        │
+│                                                             │  Romano se extendió a regiones muy diversas. En la actualida │        │
+│                                                             │ d, el cerezo se encuentra difundido por numerosas regiones y │        │
+│                                                             │  países del mundo con clima templado                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cerezo                                                      │ Las principales especies de cerezo cultivadas en el mundo so │        │
+│                                                             │ n el cerezo dulce (Prunus avium), el guindo (P. cerasus) y e │        │
+│                                                             │ l cerezo \"Duke\", híbrido de los anteriores. Ambas especies │        │
+│                                                             │  son naturales del sureste de Europa y oeste de Asia. El cer │        │
+│                                                             │ ezo dulce tuvo su origen probablemente en el mar Negro y en  │        │
+│                                                             │ el mar Caspio, difundiéndose después hacia Europa y Asia, ll │        │
+│                                                             │ evado por los pájaros y las migraciones humanas. Fue uno de  │        │
+│                                                             │ los frutales más apreciados por los griegos y con el Imperio │        │
+│                                                             │  Romano se extendió a regiones muy diversas. En la actualida │        │
+│                                                             │ d, el cerezo se encuentra difundido por numerosas regiones y │        │
+│                                                             │  países del mundo con clima templado                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Ciruelo                                                     │ árbol de tamaño mediano que alcanza una altura máxima de 5-6 │        │
+│                                                             │  m. Tronco de corteza pardo-azulada, brillante, lisa o agrie │        │
+│                                                             │ tada longitudinalmente. Produce ramas alternas, pequeñas, de │        │
+│                                                             │ lgadas, unas veces lisas, glabras y otras pubescentes y vell │        │
+│                                                             │ osas                                                         │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Granado                                                     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │        │
+│                                                             │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │        │
+│                                                             │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │        │
+│                                                             │  o menos cuadrangulares o angostas y de cuatro alas, posteri │        │
+│                                                             │ ormente se vuelven redondas con corteza de color café grisác │        │
+│                                                             │ eo, la mayoría de las ramas, pero especialmente las pequeñas │        │
+│                                                             │  ramitas axilares, son en forma de espina o terminan en una  │        │
+│                                                             │ espina aguda; la copa es extendida.                          │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Granado                                                     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │        │
+│                                                             │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │        │
+│                                                             │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │        │
+│                                                             │  o menos cuadrangulares o angostas y de cuatro alas, posteri │        │
+│                                                             │ ormente se vuelven redondas con corteza de color café grisác │        │
+│                                                             │ eo, la mayoría de las ramas, pero especialmente las pequeñas │        │
+│                                                             │  ramitas axilares, son en forma de espina o terminan en una  │        │
+│                                                             │ espina aguda; la copa es extendida.                          │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Granado                                                     │ pequeño árbol caducifolio, a veces con porte arbustivo, de 3 │        │
+│                                                             │  a 6 m de altura, con el tronco retorcido. Madera dura y cor │        │
+│                                                             │ teza escamosa de color grisáceo. Las ramitas jóvenes son más │        │
+│                                                             │  o menos cuadrangulares o angostas y de cuatro alas, posteri │        │
+│                                                             │ ormente se vuelven redondas con corteza de color café grisác │        │
+│                                                             │ eo, la mayoría de las ramas, pero especialmente las pequeñas │        │
+│                                                             │  ramitas axilares, son en forma de espina o terminan en una  │        │
+│                                                             │ espina aguda; la copa es extendida.                          │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Higuera                                                     │ La higuera (Ficus carica L.) es un árbol típico de secano en │        │
+│                                                             │  los países mediterráneos. Su rusticidad y su fácil multipli │        │
+│                                                             │ cación hacen de la higuera un frutal muy apropiado para el c │        │
+│                                                             │ ultivo extensivo.. Siempre ha sido considerado como árbol qu │        │
+│                                                             │ e no requiere cuidado alguno una vez plantado y arraigado, l │        │
+│                                                             │ imitándose el hombre a recoger de él los frutos cuando madur │        │
+│                                                             │ an, unos para consumo en fresco y otros para conserva. Las ú │        │
+│                                                             │ nicas higueras con cuidados culturales esmerados, en muchas  │        │
+│                                                             │ comarcas, son las brevales, por el interés económico de su p │        │
+│                                                             │ rimera cosecha, la de brevas.                                │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Manzano                                                     │ alcanza como máximo 10 m. de altura y tiene una copa globosa │        │
+│                                                             │ . Tronco derecho que normalmente alcanza de 2 a 2,5 m. de al │        │
+│                                                             │ tura, con corteza cubierta de lenticelas, lisa, adherida, de │        │
+│                                                             │  color ceniciento verdoso sobre los ramos y escamosa y gris  │        │
+│                                                             │ parda sobre las partes viejas del árbol. Tiene una vida de u │        │
+│                                                             │ nos 60-80 años. Las ramas se insertan en ángulo abierto sobr │        │
+│                                                             │ e el tallo, de color verde oscuro, a veces tendiendo a negru │        │
+│                                                             │ zco o violáceo. Los brotes jóvenes terminan con frecuencia e │        │
+│                                                             │ n una espina                                                 │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Melocotonero                                                │ Árbol caducifolio de porte bajo con corteza lisa, de color c │        │
+│                                                             │ eniciento. Sus hojas son alargadas con el margen ligeramente │        │
+│                                                             │  aserrado, de color verde brillante, algo más claras por el  │        │
+│                                                             │ envés. El melocotonero está muy arraigado en la cultura asiá │        │
+│                                                             │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │        │
+│                                                             │ id japonés, nació del interior de un enorme melocotón que fl │        │
+│                                                             │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │        │
+│                                                             │ onfiere longevidad al ser humano, ya que formaba parte de la │        │
+│                                                             │  dieta de sus dioses inmortales.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Melocotonero                                                │ Árbol caducifolio de porte bajo con corteza lisa, de color c │        │
+│                                                             │ eniciento. Sus hojas son alargadas con el margen ligeramente │        │
+│                                                             │  aserrado, de color verde brillante, algo más claras por el  │        │
+│                                                             │ envés. El melocotonero está muy arraigado en la cultura asiá │        │
+│                                                             │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │        │
+│                                                             │ id japonés, nació del interior de un enorme melocotón que fl │        │
+│                                                             │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │        │
+│                                                             │ onfiere longevidad al ser humano, ya que formaba parte de la │        │
+│                                                             │  dieta de sus dioses inmortales.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Melocotonero                                                │ Árbol caducifolio de porte bajo con corteza lisa, de color c │        │
+│                                                             │ eniciento. Sus hojas son alargadas con el margen ligeramente │        │
+│                                                             │  aserrado, de color verde brillante, algo más claras por el  │        │
+│                                                             │ envés. El melocotonero está muy arraigado en la cultura asiá │        │
+│                                                             │ tica.\r\nEn Japón, el noble heroe Momotaro, una especie de C │        │
+│                                                             │ id japonés, nació del interior de un enorme melocotón que fl │        │
+│                                                             │ otaba río abajo.\r\nEn China se piensa que comer melocotón c │        │
+│                                                             │ onfiere longevidad al ser humano, ya que formaba parte de la │        │
+│                                                             │  dieta de sus dioses inmortales.                             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Membrillero                                                 │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │        │
+│                                                             │ so y la corteza lisa, grisácea, que se desprende en escamas  │        │
+│                                                             │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │        │
+│                                                             │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Membrillero                                                 │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │        │
+│                                                             │ so y la corteza lisa, grisácea, que se desprende en escamas  │        │
+│                                                             │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │        │
+│                                                             │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Membrillero                                                 │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │        │
+│                                                             │ so y la corteza lisa, grisácea, que se desprende en escamas  │        │
+│                                                             │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │        │
+│                                                             │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Membrillero                                                 │ arbolito caducifolio de 4-6 m de altura con el tronco tortuo │        │
+│                                                             │ so y la corteza lisa, grisácea, que se desprende en escamas  │        │
+│                                                             │ con la edad. Copa irregular, con ramas inermes, flexuosas, p │        │
+│                                                             │ arduzcas, punteadas. Ramillas jóvenes tomentosas             │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Arbustos Mix Maceta                                         │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mimosa Injerto CLASICA Dealbata                             │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │        │
+│                                                             │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │        │
+│                                                             │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │        │
+│                                                             │ a). Arbol de follaje persistente muy usado en parques por su │        │
+│                                                             │  atractiva floración amarilla hacia fines del invierno. Altu │        │
+│                                                             │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │        │
+│                                                             │ je perenne de tonos plateados, muy ornamental. Sus hojas son │        │
+│                                                             │  de textura fina, de color verde y sus flores amarillas que  │        │
+│                                                             │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │        │
+│                                                             │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │        │
+│                                                             │ mente curvada, con los bordes algo constreñidos entre las se │        │
+│                                                             │ millas, que se disponen en el fruto longitudinalmente...     │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mimosa Semilla Bayleyana                                    │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │        │
+│                                                             │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │        │
+│                                                             │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │        │
+│                                                             │ a). Arbol de follaje persistente muy usado en parques por su │        │
+│                                                             │  atractiva floración amarilla hacia fines del invierno. Altu │        │
+│                                                             │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │        │
+│                                                             │ je perenne de tonos plateados, muy ornamental. Sus hojas son │        │
+│                                                             │  de textura fina, de color verde y sus flores amarillas que  │        │
+│                                                             │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │        │
+│                                                             │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │        │
+│                                                             │ mente curvada, con los bordes algo constreñidos entre las se │        │
+│                                                             │ millas, que se disponen en el fruto longitudinalmente...     │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mimosa Semilla Espectabilis                                 │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │        │
+│                                                             │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │        │
+│                                                             │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │        │
+│                                                             │ a). Arbol de follaje persistente muy usado en parques por su │        │
+│                                                             │  atractiva floración amarilla hacia fines del invierno. Altu │        │
+│                                                             │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │        │
+│                                                             │ je perenne de tonos plateados, muy ornamental. Sus hojas son │        │
+│                                                             │  de textura fina, de color verde y sus flores amarillas que  │        │
+│                                                             │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │        │
+│                                                             │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │        │
+│                                                             │ mente curvada, con los bordes algo constreñidos entre las se │        │
+│                                                             │ millas, que se disponen en el fruto longitudinalmente...     │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mimosa Semilla Longifolia                                   │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │        │
+│                                                             │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │        │
+│                                                             │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │        │
+│                                                             │ a). Arbol de follaje persistente muy usado en parques por su │        │
+│                                                             │  atractiva floración amarilla hacia fines del invierno. Altu │        │
+│                                                             │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │        │
+│                                                             │ je perenne de tonos plateados, muy ornamental. Sus hojas son │        │
+│                                                             │  de textura fina, de color verde y sus flores amarillas que  │        │
+│                                                             │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │        │
+│                                                             │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │        │
+│                                                             │ mente curvada, con los bordes algo constreñidos entre las se │        │
+│                                                             │ millas, que se disponen en el fruto longitudinalmente...     │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Mimosa Semilla Floribunda 4 estaciones                      │ Acacia dealbata. Nombre común o vulgar: Mimosa fina, Mimosa, │        │
+│                                                             │  Mimosa común, Mimosa plateada, Aromo francés. Familia: Mimo │        │
+│                                                             │ saceae. Origen: Australia, Sureste, (N. G. del Sur y Victori │        │
+│                                                             │ a). Arbol de follaje persistente muy usado en parques por su │        │
+│                                                             │  atractiva floración amarilla hacia fines del invierno. Altu │        │
+│                                                             │ ra: de 3 a 10 metros generalmente. Crecimiento rápido. Folla │        │
+│                                                             │ je perenne de tonos plateados, muy ornamental. Sus hojas son │        │
+│                                                             │  de textura fina, de color verde y sus flores amarillas que  │        │
+│                                                             │ aparecen en racimos grandes. Florece de Enero a Marzo (Hemis │        │
+│                                                             │ ferio Norte). Legumbre de 5-9 cm de longitud, recta o ligera │        │
+│                                                             │ mente curvada, con los bordes algo constreñidos entre las se │        │
+│                                                             │ millas, que se disponen en el fruto longitudinalmente...     │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Abelia Floribunda                                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Callistemom (Mix)                                           │ Limpitatubos. arbolito de 6-7 m de altura. Ramas flexibles y │        │
+│                                                             │  colgantes (de ahí lo de \"llorón\")..                       │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Callistemom (Mix)                                           │ Limpitatubos. arbolito de 6-7 m de altura. Ramas flexibles y │        │
+│                                                             │  colgantes (de ahí lo de \"llorón\")..                       │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Corylus Avellana \"Contorta\"                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Escallonia (Mix)                                            │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Evonimus Emerald Gayeti                                     │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Evonimus Pulchellus                                         │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Hibiscus Syriacus  \"Helene\" -Blanco-C.rojo                │ Por su capacidad de soportar podas, pueden ser fácilmente mo │        │
+│                                                             │ ldeadas como bonsái en el transcurso de pocos años. Flores d │        │
+│                                                             │ e muchos colores según la variedad, desde el blanco puro al  │        │
+│                                                             │ rojo intenso, del amarillo al anaranjado. La flor apenas dur │        │
+│                                                             │ a 1 día, pero continuamente aparecen nuevas y la floración s │        │
+│                                                             │ e prolonga durante todo el periodo de crecimiento vegetativo │        │
+│                                                             │ .                                                            │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Hibiscus Syriacus \"Pink Giant\" Rosa                       │ Por su capacidad de soportar podas, pueden ser fácilmente mo │        │
+│                                                             │ ldeadas como bonsái en el transcurso de pocos años. Flores d │        │
+│                                                             │ e muchos colores según la variedad, desde el blanco puro al  │        │
+│                                                             │ rojo intenso, del amarillo al anaranjado. La flor apenas dur │        │
+│                                                             │ a 1 día, pero continuamente aparecen nuevas y la floración s │        │
+│                                                             │ e prolonga durante todo el periodo de crecimiento vegetativo │        │
+│                                                             │ .                                                            │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Lonicera Nitida \"Maigrum\"                                 │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Prunus pisardii                                             │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Weigelia \"Bristol Ruby\"                                   │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Leptospermum formado PIRAMIDE                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Leptospermum COPA                                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Nerium oleander-CALIDAD \"GARDEN\"                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Nerium Oleander Arbusto GRANDE                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Nerium oleander COPA  Calibre 6/8                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ ROSAL TREPADOR                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Camelia Blanco, Chrysler Rojo, Soraya Naranja,              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Solanum Jazminoide                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Wisteria Sinensis  azul, rosa, blanca                       │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Wisteria Sinensis INJERTADAS DECÃ“                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Bougamvillea Sanderiana Tutor                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Bougamvillea Sanderiana Espaldera                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Bougamvillea Sanderiana Espaldera                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Bougamvillea Sanderiana, 3 tut. piramide                    │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Expositor Árboles clima mediterráneo                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Expositor Árboles borde del mar                             │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Brachychiton Acerifolius                                    │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cassia Corimbosa                                            │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cassia Corimbosa                                            │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Chitalpa Summer Bells                                       │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Erytrina Kafra                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Eucalyptus Citriodora                                       │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Eucalyptus Ficifolia                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Hibiscus Syriacus  Var. Injertadas 1 Tallo                  │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Lagunaria Patersonii                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Lagunaria Patersonii                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Morus Alba                                                  │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Platanus Acerifolia                                         │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Salix Babylonica  Pendula                                   │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Tamarix  Ramosissima Pink Cascade                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Tecoma Stands                                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Tecoma Stands                                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Tipuana Tipu                                                │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Pleioblastus distichus-Bambú enano                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Sasa palmata                                                │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Phylostachys aurea                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Phylostachys aurea                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Phylostachys Bambusa Spectabilis                            │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Phylostachys biseti                                         │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Pseudosasa japonica (Metake)                                │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Pseudosasa japonica (Metake)                                │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cedrus Deodara \"Feeling Blue\" Novedad                     │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Juniperus chinensis \"Blue Alps\"                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Juniperus Chinensis Stricta                                 │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Juniperus squamata \"Blue Star\"                            │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Juniperus x media Phitzeriana verde                         │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Bismarckia Nobilis                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Brahea Armata                                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Brahea Edulis                                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Butia Capitata                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Butia Capitata                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Butia Capitata                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Chamaerops Humilis                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Chamaerops Humilis                                          │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Chamaerops Humilis \"Cerifera\"                             │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Chrysalidocarpus Lutescens -ARECA                           │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cordyline Australis -DRACAENA                               │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cycas Revoluta                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Cycas Revoluta                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Dracaena Drago                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Dracaena Drago                                              │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Livistonia Decipiens                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Livistonia Decipiens                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Rhaphis Excelsa                                             │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Sabal Minor                                                 │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Sabal Minor                                                 │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Trachycarpus Fortunei                                       │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Washingtonia Robusta                                        │                                                              │        │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┤
+│ Zamia Furfuracaea                                           │                                                              │        │
+└─────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────┴────────┘
+**/
+-- Devuelve las oficinas donde no trabajan ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama Frutales.
+select o.* from empleado as e
+INNER JOIN cliente as c ON e.codigo_empleado=c.codigo_empleado_rep_ventas
+RIGHT JOIN oficina as o ON e.codigo_oficina=o.codigo_oficina
+JOIN pedido as p ON c.codigo_cliente=p.codigo_cliente
+JOIN detalle_pedido as dp ON p.codigo_pedido=dp.codigo_pedido
+JOIN producto as pd ON dp.codigo_producto=pd.codigo_producto
+JOIN gama_producto as g ON pd.gama=g.gama
+where g.gama='Frutales' and o.codigo_oficina is null;
+/**
+Sin respuesta
+**/
+-- Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+select c.* from cliente as c
+INNER JOIN pedido as p ON c.codigo_cliente=p.codigo_cliente
+LEFT JOIN pago as pa ON c.codigo_cliente=pa.codigo_cliente
+where pa.codigo_cliente is null
+group by c.codigo_cliente;
+/**
+┌────────────────┬────────────────┬─────────────────┬───────────────────┬───────────┬───────────┬──────────────────┬──────────────────┬────────┬─────────────┬───────┬───────────────┬────────────────────────────┬────────────────┐
+│ codigo_cliente │ nombre_cliente │ nombre_contacto │ apellido_contacto │ telefono  │    fax    │ linea_direccion1 │ linea_direccion2 │ ciudad │   region    │ pais  │ codigo_postal │ codigo_empleado_rep_ventas │ limite_credito │
+├────────────────┼────────────────┼─────────────────┼───────────────────┼───────────┼───────────┼──────────────────┼──────────────────┼────────┼─────────────┼───────┼───────────────┼────────────────────────────┼────────────────┤
+│ 36             │ Flores S.L.    │ Antonio         │ Romero            │ 654352981 │ 685249700 │ Avenida España   │                  │ Madrid │ Fuenlabrada │ Spain │ 29643         │ 18                         │ 6000           │
+└────────────────┴────────────────┴─────────────────┴───────────────────┴───────────┴───────────┴──────────────────┴──────────────────┴────────┴─────────────┴───────┴───────────────┴────────────────────────────┴────────────────┘
+**/
+-- Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
+select e.*, j.nombre as "Nombre jefe" from empleado as e
+LEFT JOIN cliente as c ON e.codigo_empleado=c.codigo_empleado_rep_ventas
+LEFT JOIN empleado as j ON e.codigo_jefe=j.codigo_empleado
+where c.codigo_empleado_rep_ventas is null;
+/**
+┌─────────────────┬─────────────┬────────────┬───────────┬───────────┬───────────────────────────┬────────────────┬─────────────┬───────────────────────┬─────────────┐
+│ codigo_empleado │   nombre    │ apellido1  │ apellido2 │ extension │           email           │ codigo_oficina │ codigo_jefe │        puesto         │ Nombre jefe │
+├─────────────────┼─────────────┼────────────┼───────────┼───────────┼───────────────────────────┼────────────────┼─────────────┼───────────────────────┼─────────────┤
+│ 1               │ Marcos      │ Magaña     │ Perez     │ 3897      │ marcos@jardineria.es      │ TAL-ES         │             │ Director General      │             │
+│ 2               │ Ruben       │ López      │ Martinez  │ 2899      │ rlopez@jardineria.es      │ TAL-ES         │ 1           │ Subdirector Marketing │ Marcos      │
+│ 3               │ Alberto     │ Soria      │ Carrasco  │ 2837      │ asoria@jardineria.es      │ TAL-ES         │ 2           │ Subdirector Ventas    │ Ruben       │
+│ 4               │ Maria       │ Solís      │ Jerez     │ 2847      │ msolis@jardineria.es      │ TAL-ES         │ 2           │ Secretaria            │ Ruben       │
+│ 6               │ Juan Carlos │ Ortiz      │ Serrano   │ 2845      │ cortiz@jardineria.es      │ TAL-ES         │ 3           │ Representante Ventas  │ Alberto     │
+│ 7               │ Carlos      │ Soria      │ Jimenez   │ 2444      │ csoria@jardineria.es      │ MAD-ES         │ 3           │ Director Oficina      │ Alberto     │
+│ 10              │ Hilario     │ Rodriguez  │ Huertas   │ 2444      │ hrodriguez@jardineria.es  │ MAD-ES         │ 7           │ Representante Ventas  │ Carlos      │
+│ 13              │ David       │ Palma      │ Aceituno  │ 2519      │ dpalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │ Emmanuel    │
+│ 14              │ Oscar       │ Palma      │ Aceituno  │ 2519      │ opalma@jardineria.es      │ BCN-ES         │ 11          │ Representante Ventas  │ Emmanuel    │
+│ 15              │ Francois    │ Fignon     │           │ 9981      │ ffignon@gardening.com     │ PAR-FR         │ 3           │ Director Oficina      │ Alberto     │
+│ 17              │ Laurent     │ Serra      │           │ 9982      │ lserra@gardening.com      │ PAR-FR         │ 15          │ Representante Ventas  │ Francois    │
+│ 20              │ Hilary      │ Washington │           │ 7565      │ hwashington@gardening.com │ BOS-USA        │ 3           │ Director Oficina      │ Alberto     │
+│ 21              │ Marcus      │ Paxton     │           │ 7565      │ mpaxton@gardening.com     │ BOS-USA        │ 20          │ Representante Ventas  │ Hilary      │
+│ 23              │ Nei         │ Nishikori  │           │ 8734      │ nnishikori@gardening.com  │ TOK-JP         │ 3           │ Director Oficina      │ Alberto     │
+│ 24              │ Narumi      │ Riko       │           │ 8734      │ nriko@gardening.com       │ TOK-JP         │ 23          │ Representante Ventas  │ Nei         │
+│ 25              │ Takuma      │ Nomura     │           │ 8735      │ tnomura@gardening.com     │ TOK-JP         │ 23          │ Representante Ventas  │ Nei         │
+│ 26              │ Amy         │ Johnson    │           │ 3321      │ ajohnson@gardening.com    │ LON-UK         │ 3           │ Director Oficina      │ Alberto     │
+│ 27              │ Larry       │ Westfalls  │           │ 3322      │ lwestfalls@gardening.com  │ LON-UK         │ 26          │ Representante Ventas  │ Amy         │
+│ 28              │ John        │ Walton     │           │ 3322      │ jwalton@gardening.com     │ LON-UK         │ 26          │ Representante Ventas  │ Amy         │
+│ 29              │ Kevin       │ Fallmer    │           │ 3210      │ kfalmer@gardening.com     │ SYD-AU         │ 3           │ Director Oficina      │ Alberto     │
+└─────────────────┴─────────────┴────────────┴───────────┴───────────┴───────────────────────────┴────────────────┴─────────────┴───────────────────────┴─────────────┘
+**/
 ```
 
 </div>
