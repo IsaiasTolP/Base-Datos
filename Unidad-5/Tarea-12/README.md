@@ -24,12 +24,25 @@ CREATE TABLE comercial (
 ```
 ```sql
 CREATE TABLE pedido (
-    id integer NOT NULL PRIMARY KEY AUTOINCREMENT
+    id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
     total real NOT NULL,
-    fecha date NOT NULL
-    id_cliente integer references cliente(id)
+    fecha date NOT NULL,
+    id_cliente integer references cliente(id),
     id_comercial integer references comercial(id)
-)
+);
 ```
+
+## Consultas sobre una tabla
+
+## Consultas multitabla (INNER JOIN)
+
+## Consultas resumen (Funciones)
+
+## Subconsultas
+### Con operadores básicos de comparación
+
+### Subconsultas con IN y NOT IN
+
+### Subconsultas con EXISTS y NOT EXISTS
 
 </div>
