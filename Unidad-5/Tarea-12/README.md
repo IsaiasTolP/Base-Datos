@@ -33,11 +33,17 @@ CREATE TABLE pedido (
 ```
 
 ## Consultas sobre una tabla
+```sql
 
+```
 ## Consultas multitabla (INNER JOIN)
+```sql
 
+```
 ## Consultas resumen (Funciones)
+```sql
 
+```
 ## Subconsultas
 ### Con operadores básicos de comparación
 
