@@ -461,22 +461,126 @@ where d.id=p.id_departamento and p.id_profesor=a.id_profesor and a.id NOT IN (se
 ## Consultas con funciones
 ```sql
 -- Devuelve el número total de alumnas que hay.
- 
+select COUNT(*) as "Total alumnas" from persona where tipo='alumno' and sexo='M';
+/**
+┌───────────────┐
+│ Total alumnas │
+├───────────────┤
+│ 3             │
+└───────────────┘
+**/
 -- Calcula cuántos alumnos nacieron en 1999.
+select COUNT(*) as "nacidos en 1999" from persona where tipo='alumno' and fecha_nacimiento regexp '1999/';
+/**
+┌─────────────────┐
+│ nacidos en 1999 │
+├─────────────────┤
+│ 2               │
+└─────────────────┘
+**/
  
 -- Calcula cuántos profesores hay en cada departamento. El resultado sólo debe mostrar dos columnas, una con el nombre del departamento y otra con el número de profesores que hay en ese departamento. El resultado sólo debe incluir los departamentos que tienen profesores asociados y deberá estar ordenado de mayor a menor por el número de profesores.
- 
+select d.nombre, COUNT(p.id_profesor) as "Numero profesores" from departamento as d INNER JOIN profesor as p ON d.id=p.id_departamento group by d.id order by COUNT(p.id_profesor) DESC;
+/**
+┌────────────────────┬───────────────────┐
+│       nombre       │ Numero profesores │
+├────────────────────┼───────────────────┤
+│ Educación          │ 3                 │
+│ Química y Física   │ 2                 │
+│ Economía y Empresa │ 2                 │
+│ Matemáticas        │ 2                 │
+│ Informática        │ 2                 │
+│ Agronomía          │ 1                 │
+└────────────────────┴───────────────────┘
+**/
 -- Devuelve un listado con todos los departamentos y el número de profesores que hay en cada uno de ellos. Tenga en cuenta que pueden existir departamentos que no tienen profesores asociados. Estos departamentos también tienen que aparecer en el listado.
- 
+select d.nombre, COUNT(p.id_profesor) as "Numero profesores" from departamento as d LEFT JOIN profesor as p ON d.id=p.id_departamento group by d.id order by COUNT(p.id_profesor) DESC;
+/**
+┌─────────────────────┬───────────────────┐
+│       nombre        │ Numero profesores │
+├─────────────────────┼───────────────────┤
+│ Educación           │ 3                 │
+│ Informática         │ 2                 │
+│ Matemáticas         │ 2                 │
+│ Economía y Empresa  │ 2                 │
+│ Química y Física    │ 2                 │
+│ Agronomía           │ 1                 │
+│ Filología           │ 0                 │
+│ Derecho             │ 0                 │
+│ Biología y Geología │ 0                 │
+└─────────────────────┴───────────────────┘
+**/
 -- Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno. Tenga en cuenta que pueden existir grados que no tienen asignaturas asociadas. Estos grados también tienen que aparecer en el listado. El resultado deberá estar ordenado de mayor a menor por el número de asignaturas.
- 
+select g.nombre, COUNT(a.id) as "Numero asignatura" from grado as g LEFT JOIN asignatura as a ON g.id=a.id_grado group by g.id order by COUNT(a.id) DESC;
+/**
+┌────────────────────────────────────────────────────────┬───────────────────┐
+│                         nombre                         │ Numero asignatura │
+├────────────────────────────────────────────────────────┼───────────────────┤
+│ Grado en Ingeniería Informática (Plan 2015)            │ 51                │
+│ Grado en Biotecnología (Plan 2015)                     │ 32                │
+│ Grado en Ingeniería Agrícola (Plan 2015)               │ 0                 │
+│ Grado en Ingeniería Eléctrica (Plan 2014)              │ 0                 │
+│ Grado en Ingeniería Electrónica Industrial (Plan 2010) │ 0                 │
+│ Grado en Ingeniería Mecánica (Plan 2010)               │ 0                 │
+│ Grado en Ingeniería Química Industrial (Plan 2010)     │ 0                 │
+│ Grado en Ciencias Ambientales (Plan 2009)              │ 0                 │
+│ Grado en Matemáticas (Plan 2010)                       │ 0                 │
+│ Grado en Química (Plan 2009)                           │ 0                 │
+└────────────────────────────────────────────────────────┴───────────────────┘
+**/
 -- Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno, de los grados que tengan más de 40 asignaturas asociadas.
- 
+select g.nombre, COUNT(a.id) as "Numero asignatura" from grado as g INNER JOIN asignatura as a ON g.id=a.id_grado group by g.id HAVING COUNT(a.id) > 40 order by COUNT(a.id) DESC;
+/**
+┌─────────────────────────────────────────────┬───────────────────┐
+│                   nombre                    │ Numero asignatura │
+├─────────────────────────────────────────────┼───────────────────┤
+│ Grado en Ingeniería Informática (Plan 2015) │ 51                │
+└─────────────────────────────────────────────┴───────────────────┘
+**/
 -- Devuelve un listado que muestre el nombre de los grados y la suma del número total de créditos que hay para cada tipo de asignatura. El resultado debe tener tres columnas: nombre del grado, tipo de asignatura y la suma de los créditos de todas las asignaturas que hay de ese tipo. Ordene el resultado de mayor a menor por el número total de crédidos.
-
+select g.nombre, a.tipo, SUM(a.creditos) as "Total creditos" from grado as g INNER JOIN asignatura as a ON g.id=a.id_grado group by g.id, a.tipo order by SUM(a.creditos) DESC;
+/**
+┌─────────────────────────────────────────────┬─────────────┬────────────────┐
+│                   nombre                    │    tipo     │ Total creditos │
+├─────────────────────────────────────────────┼─────────────┼────────────────┤
+│ Grado en Ingeniería Informática (Plan 2015) │ optativa    │ 180.0          │
+│ Grado en Biotecnología (Plan 2015)          │ obligatoria │ 120.0          │
+│ Grado en Ingeniería Informática (Plan 2015) │ básica      │ 72.0           │
+│ Grado en Biotecnología (Plan 2015)          │ básica      │ 60.0           │
+│ Grado en Ingeniería Informática (Plan 2015) │ obligatoria │ 54.0           │
+└─────────────────────────────────────────────┴─────────────┴────────────────┘
+**/
 -- Devuelve un listado que muestre cuántos alumnos se han matriculado de alguna asignatura en cada uno de los cursos escolares. El resultado deberá mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos matriculados.
-
+select c.anyo_inicio, COUNT(asma.id_alumno) as "Numero alumnos" from alumno_se_matricula_asignatura as asma INNER JOIN curso_escolar as c ON asma.id_curso_escolar=c.id group by c.id;
+/**
+┌─────────────┬────────────────┐
+│ anyo_inicio │ Numero alumnos │
+├─────────────┼────────────────┤
+│ 2014        │ 9              │
+│ 2018        │ 30             │
+└─────────────┴────────────────┘
+**/
 -- Devuelve un listado con el número de asignaturas que imparte cada profesor. El listado debe tener en cuenta aquellos profesores que no imparten ninguna asignatura. El resultado mostrará cinco columnas: id, nombre, primer apellido, segundo apellido y número de asignaturas. El resultado estará ordenado de mayor a menor por el número de asignaturas.
+select p.id, p.nombre, p.apellido1, p.apellido2, COUNT(a.id) as "Numero asignaturas" from persona as p INNER JOIN profesor as prof ON p.id=prof.id_profesor
+LEFT JOIN asignatura as a ON prof.id_profesor=a.id_profesor group by prof.id_profesor order by "Numero asignaturas" DESC;
+/**
+┌────┬───────────┬────────────┬────────────┬────────────────────┐
+│ id │  nombre   │ apellido1  │ apellido2  │ Numero asignaturas │
+├────┼───────────┼────────────┼────────────┼────────────────────┤
+│ 14 │ Manolo    │ Hamill     │ Kozey      │ 11                 │
+│ 3  │ Zoe       │ Ramirez    │ Gea        │ 10                 │
+│ 5  │ David     │ Schmidt    │ Fisher     │ 0                  │
+│ 8  │ Cristina  │ Lemke      │ Rutherford │ 0                  │
+│ 10 │ Esther    │ Spencer    │ Lakin      │ 0                  │
+│ 12 │ Carmen    │ Streich    │ Hirthe     │ 0                  │
+│ 13 │ Alfredo   │ Stiedemann │ Morissette │ 0                  │
+│ 15 │ Alejandro │ Kohler     │ Schoen     │ 0                  │
+│ 16 │ Antonio   │ Fahey      │ Considine  │ 0                  │
+│ 17 │ Guillermo │ Ruecker    │ Upton      │ 0                  │
+│ 18 │ Micaela   │ Monahan    │ Murray     │ 0                  │
+│ 20 │ Francesca │ Schowalter │ Muller     │ 0                  │
+└────┴───────────┴────────────┴────────────┴────────────────────┘
+**/
 ```
 ## Subconsultas
 ```sql
