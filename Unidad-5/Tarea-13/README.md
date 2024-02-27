@@ -611,8 +611,8 @@ select * from departamento where id NOT IN (select id_departamento from profesor
 **/
 
 -- Devuelve un listado con los profesores que tienen un departamento asociado y que no imparten ninguna asignatura
-select p.* from persona as p, profesor as prof where p.id IN (select id_profesor from profesor)
-prof.id_departamento IN (select id_departamento from departamento) and prof.id_profesor NOT IN (select DISTINCT(id_profesor) from asignatura where id_profesor NOT NULL);
+select p.* from persona as p INNER JOIN profesor as prof ON p.id=prof.id_profesor
+where prof.id_departamento IN (select id_departamento from departamento) and prof.id_profesor NOT IN (select DISTINCT(id_profesor) from asignatura where id_profesor NOT NULL);
 /**
 ┌────┬───────────┬───────────┬────────────┬────────────┬─────────┬───────────────────────────┬───────────┬──────────────────┬──────┬──────────┐
 │ id │    nif    │  nombre   │ apellido1  │ apellido2  │ ciudad  │         direccion         │ telefono  │ fecha_nacimiento │ sexo │   tipo   │
