@@ -2,6 +2,8 @@
 
 # <div align="center">Consultas en MySQL Tarea 3</div>
 
+![Sqlogo](images/Mysql.png)
+
 ## Base de Datos
 ```sql
 CREATE DATABASE IF NOT EXISTS tienda2;
