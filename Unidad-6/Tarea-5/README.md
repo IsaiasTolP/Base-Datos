@@ -3,10 +3,12 @@
 # <div align="center">Tarea 5 MySQL</div>
 ![Logo](../Tarea-3/images/Mysql.png)
 
-## Eliminar la tabla alumno "si existe"
+## Elimine la tabla "cliente" si existe
 ```sql
-drop table IF EXISTS cliente;
--- Query OK, 0 rows affected, 1 warning (0,01 sec)
+drop table if exists cliente;
+/**
+Query OK, 0 rows affected, 1 warning (0,01 sec)
+**/
 ```
 
 ## Crear la tabla definiendo una clave primaria compuesta(año de inscripción y número de inscripción)
@@ -19,14 +21,6 @@ create table cliente (
     provincia VARCHAR(20),
     telefono VARCHAR(11)
 );
-```
-
-## Elimine la tabla "cliente" si existe
-```sql
-drop table if exists cliente;
-/**
-Query OK, 0 rows affected, 1 warning (0,01 sec)
-**/
 ```
 
 ## Cree la tabla sin clave primaria e incluye a posteriori esta
