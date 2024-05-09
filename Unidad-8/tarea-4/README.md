@@ -67,7 +67,7 @@ select * from empleados;
 1. Escribe un procedimiento almacenado que aumente los salarios de todos los empleados en un 5%, pero excluya a aquellos cuyo salario sea superior a 3200. El procedimiento debe tener parámetros de entrada.
 ```sql
 DELIMITER //
-CREATE PROCEDURE selective_salary_rise(IN salary_limit DECIMAL(10, 2))
+CREATE PROCEDURE selective_salary_rise(IN salary_limit DECIMAL(10, 2),IN percent DECIMAL(5,2))
 BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE emp_id INT;
@@ -82,7 +82,7 @@ BEGIN
         IF done THEN
             LEAVE read_loop;
         END IF;
-        UPDATE empleados SET salario = salario * (1 + 5 / 100) WHERE id = emp_id;
+        UPDATE empleados SET salario = salario * (1 + percent / 100) WHERE id = emp_id;
     END LOOP;
     CLOSE cur;
 END //
