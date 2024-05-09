@@ -167,8 +167,25 @@ DELIMITER //
   END //
 DELIMITER ;
 
+-- Añadimos empleados para probar el borrado.
+INSERT INTO empleados (id, nombre, salario) VALUES
+(4, 'Obrero_1', 2100), 
+(5, 'Obrero_2', 2300);
+
+/**
++----+----------+---------+
+| id | nombre   | salario |
++----+----------+---------+
+|  1 | Juan     | 3960.00 |
+|  2 | María    | 3850.00 |
+|  3 | Pedro    | 3200.00 |
+|  4 | Obrero_1 | 2100.00 |
+|  5 | Obrero_2 | 2300.00 |
++----+----------+---------+
+**/
+
 CALL fire_by_range(2000, 2500);
--- No se borra nada porque no hay empleado con salario en ese rango.
+-- Se han borrado las filas indicadas
 /**
 +----+--------+---------+
 | id | nombre | salario |
