@@ -67,5 +67,8 @@ DELIMITER ;
 ```
 
 ## Verificaciones
+```sql
+
+```
 
 </div>
