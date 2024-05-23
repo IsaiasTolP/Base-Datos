@@ -57,5 +57,28 @@ CREATE TABLE log_alumnos_eliminados (
     PRIMARY KEY (id)
 );
 
+DELIMITER //
+
+CREATE TRIGGER trigger_guardar_elementos_eliminados AFTER DELETE ON alumnos
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_alumnos_eliminados (id_alumno, fecha_hora, nombre, apellido1, apellido2, email) VALUES (
+        OLD.id, NOW(), OLD.nombre, OLD.apellido1, OLD.apellido2, OLD.email);
+END //
+
+DELIMITER ;
+
+-- Lo probamos
+DELETE FROM alumnos WHERE id = 1;
+DELETE FROM alumnos WHERE id = 5;
+select * from log_alumnos_eliminados;
+/**
++----+-----------+---------------------+--------------------------+------------------------------+---------------------------+-----------------------------+
+| id | id_alumno | fecha_hora          | nombre                   | apellido1                    | apellido2                 | email                       |
++----+-----------+---------------------+--------------------------+------------------------------+---------------------------+-----------------------------+
+|  1 |         1 | 2024-05-23 10:47:22 | Pedro0.15522042769493574 | Rodriguez0.15522042769493574 | Mendez0.15522042769493574 | PedritoTeQuiere@example.com |
+|  2 |         5 | 2024-05-23 10:49:24 | Javier                   | Gomez                        | Muñoz                     | Javi@example.com            |
++----+-----------+---------------------+--------------------------+------------------------------+---------------------------+-----------------------------+
+**/
 ```
 </div>
