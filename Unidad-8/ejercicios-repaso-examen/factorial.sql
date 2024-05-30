@@ -129,3 +129,13 @@ DELIMITER ;
 | 11 | Pedro Sanchez | diegobot@example.es |
 +----+---------------+---------------------+
 **/
+
+DELIMITER //
+
+CREATE FUNCTION give_random_range(max_limit INT,min_limit INT) RETURNS INT 
+DETERMINISTIC
+BEGIN
+    RETURN FLOOR(RAND() * (max_limit - min_limit + 1) + min_limit);
+END //
+
+DELIMITER ;
